@@ -1,6 +1,0 @@
-module Pods_commUNITY {
-  umbrella header "Pods-commUNITY-umbrella.h"
-
-  export *
-  module * { export * }
-}
