@@ -1,6 +1,0 @@
-module Pods_commUNITY_commUNITYTests {
-  umbrella header "Pods-commUNITY-commUNITYTests-umbrella.h"
-
-  export *
-  module * { export * }
-}
