@@ -11,6 +11,7 @@
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "dependencies": {
+    "@react-native-mapbox-gl/maps": "^8.1.0",
     "@react-navigation/core": "^5.15.0",
     "@react-navigation/native": "^5.9.0",
     "native-base": "^2.15.2",
