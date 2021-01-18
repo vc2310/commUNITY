@@ -4,15 +4,22 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "ios": "react-native-scripts ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ."
   },
+  "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "dependencies": {
+    "@react-navigation/core": "^5.15.0",
+    "@react-navigation/native": "^5.9.0",
     "native-base": "^2.15.2",
     "react": "16.13.1",
-    "react-native": "0.63.4"
+    "react-native": "0.63.4",
+    "react-native-gesture-handler": "^1.9.0",
+    "react-native-paper": "^4.7.0",
+    "react-native-scripts": "^2.0.1",
+    "react-navigation": "^4.4.3"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

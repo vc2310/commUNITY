@@ -6,7 +6,7 @@ import { login, signup } from './controllers/users';
 const router = Router();
 
 // Handle /users route with index action from users controller
-router.route('/login').get(login);
+router.route('/login').post(login);
 
 router.route('/signup').post(signup);
 
