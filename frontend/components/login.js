@@ -54,7 +54,7 @@ class Login extends React.Component {
       })
     } else{
       signup(this.state.email, this.state.password, this.state.firstName, this.state.lastName)
-      .then((res)=> {if (res){this.props.navigation.navigate("Home")}})
+      .then((res)=> {if (res){this.props.navigation.navigate("Main")}})
       .catch((error)=> {
         Alert.alert(error)
       })

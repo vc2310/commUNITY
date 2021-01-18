@@ -37,7 +37,7 @@ class Home extends React.Component {
       // </Container>
       <View style={{flex: 1, height: "100%", width: "100%" }}>
       <MapboxGL.MapView
-        styleURL={MapboxGL.StyleURL.Street}
+        styleURL={'mapbox://styles/faisalmuh786/ck84o8v2203891irqnlxkpdi3'}
         zoomLevel={16}
         centerCoordinate={[3.3362400, 6.5790100]}
         style={{flex: 1}}>
