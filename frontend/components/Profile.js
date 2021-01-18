@@ -2,7 +2,7 @@ import React from "react";
 import { View, TextInput, Alert } from "react-native";
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import {logout} from "../services/auth/AuthService"
+import {getUser} from "../services/auth/AuthService"
 
 class Profile extends React.Component {
   static navigationOptions = {
@@ -18,10 +18,32 @@ class Profile extends React.Component {
   };
   constructor(props) {
     super(props)
+    this.state =  {user: {}}
+  }
+  componentDidMount() {
+    getUser().then((res)=> {
+      console.log(res)
+      this.setState({res})
+    })
   }
   render () {
     return (
       <Container>
+      <View style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
+        <Text>{this.state.user.firstName}</Text>
+      </View>
+      <View style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
+        <Text>{this.state.user.email}</Text>
+
+      </View>
         <View style={{
           flex: 1,
           justifyContent: "center",

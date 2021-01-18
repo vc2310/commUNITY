@@ -24,17 +24,6 @@ class Home extends React.Component {
   }
   render () {
     return (
-      // <Container>
-      //   <View style={{
-      //     flex: 1,
-      //     justifyContent: "center",
-      //     alignItems: "center",
-      //   }}>
-      //     <Button danger onPress={()=> {logout().then(this.props.navigation.navigate("Login")).catch((error)=>{console.log(error)})}}>
-      //       <Text>LogOut</Text>
-      //     </Button>
-      //   </View>
-      // </Container>
       <View style={{flex: 1, height: "100%", width: "100%" }}>
       <MapboxGL.MapView
         styleURL={'mapbox://styles/faisalmuh786/ck84o8v2203891irqnlxkpdi3'}

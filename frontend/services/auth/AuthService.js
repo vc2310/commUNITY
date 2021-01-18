@@ -109,6 +109,28 @@ export const logout = async() => {
   })
 }
 
+export const getUser = async() => {
+  return new Promise((resolve, reject) => {
+    try{
+      user = {
+        email: '',
+        firstName: '',
+        lastName: '',
+        token: '',
+        id: ''
+      }
+      AsyncStorage.getItem('email').then((res)=>{user.email = res})
+      AsyncStorage.removeItem('firstName').then((res)=>{user.firstName = res})
+      AsyncStorage.removeItem('lastName').then((res)=>{user.lastName = res})
+      AsyncStorage.removeItem('token').then((res)=>{user.token = res})
+      AsyncStorage.removeItem('id').then((res)=>{user.id = res})
+      resolve(user)
+    } catch(error){
+      reject(error)
+    }
+  })
+}
+
 export const isLoggedIn = async() => {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem('token').then((token)=>{
