@@ -1,13 +1,11 @@
 import React from "react";
-import { View, TextInput, Alert, StyleSheet, TouchableOpacity } from "react-native";
+import { View, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import { Overlay } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { logout } from "../services/auth/AuthService"
-import { searchLocationAutoComplete } from "../services/mapbox/MapboxService"
 import MapboxGL from "@react-native-mapbox-gl/maps";
-import Autocomplete from 'react-native-autocomplete-input';
-
+import LocationAutocomplete from '../components/LocationAutocomplete'
 MapboxGL.setAccessToken("pk.eyJ1IjoiZmFpc2FsbXVoNzg2IiwiYSI6ImNrODRucXg2YjBjMnAzbW1yNjZ3ZHNqd3oifQ.-BuJJq_CEkUXCMjeypdSdg");
 
 class Home extends React.Component {
@@ -42,18 +40,6 @@ class Home extends React.Component {
     }
   }
   render () {
-    const autocompleteChanged = (text)=>{
-      this.setState({ query: text })
-      searchLocationAutoComplete(text).then((data)=>{
-        console.log(data)
-        this.setState({ data: data })
-      })
-    }
-    const centerSelected = (item)=>{
-      this.setState({ center: item.center})
-      this.setState({ query: item.place_name, data: []})
-      console.log(this.state.center)
-    }
     return (
       <View style={{flex: 1, height: "100%", width: "100%" }}>
       <MapboxGL.MapView
@@ -69,45 +55,40 @@ class Home extends React.Component {
           </MapboxGL.Camera>
       </MapboxGL.MapView>
       <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "20%", marginLeft: "12.5%"}}>
-        <Autocomplete
-          autoCapitalize="none"
-          autoCorrect={false}
-          data={this.state.data}
-          defaultValue={''}
-          value={this.state.query}
-          placeholder="Search for a location"
-          style={styles.TextInputStyleClass}
-          onChangeText={(text) => autocompleteChanged(text)}
-          renderItem={({ item, i }) => (
-            <TouchableOpacity onPress={() => centerSelected(item)}>
-              <Text>{item.place_name}</Text>
-            </TouchableOpacity>
-          )}
-        />
+        <LocationAutocomplete onSelect={(item) => {this.setState({ center: item.center})}}/>
       </View>
       <View style={{position: 'absolute', width: "75%", marginTop: "180%", marginLeft: "82.5%"}}>
       <Button onPress={()=> this.setState({addIssue: true})}>
         <Text>+</Text>
       </Button>
       <Overlay isVisible={this.state.addIssue} fullScreen={true} onBackdropPress={()=> this.setState({addIssue: false})}>
-        <Container>
+        <ScrollView>
+          <View style={styles.inputContainer}>
+          <View >
+            <H1>Report Issue</H1>
+          </View>
           <View style={{
             flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
           }}>
-            <H1>Report Issue</H1>
-            <TextInput stye={{width: "75%"}}
+            <TextInput stye={styles.textInput}
               onChangeText={(title) => this.setState({issue: {title: title}})}
               placeholder="Title" />
-            <TextInput stye={{width: "75%"}}
+            <TextInput stye={styles.textInput}
               onChangeText={(description) => this.setState({issue: {description: description}})}
               placeholder="Description" />
-            <Button>
-              <Text onPress={()=> this.setState({addIssue: false})}>Back</Text>
-            </Button>
+            </View>
+            <View style={{
+              width: '100%',
+            }}>
+            <LocationAutocomplete onSelect={(item) => {}}/>
+            </View>
+            <View style={{position: 'absolute', width: "75%", marginTop: "180%", marginLeft: "12.5%"}}>
+              <Button>
+                <Text onPress={()=> this.setState({addIssue: false})}>Back</Text>
+              </Button>
+            </View>
           </View>
-        </Container>
+        </ScrollView>
       </Overlay>
       </View>
     </View>
@@ -125,24 +106,17 @@ const styles = StyleSheet.create({
   margin: 10
 
   },
-
-  TextInputStyleClass:{
-
-  // Setting up Hint Align center.
-  textAlign: 'center',
-
-  // Setting up TextInput height as 50 pixel.
-  height: 50,
-
-  // Set border width.
-   borderWidth: 0,
-
-  // Set border Radius.
-   borderRadius: 10 ,
-
-  //Set background color of Text Input.
-   backgroundColor : "#FFFFFF",
-
+ inputContainer: {
+    paddingTop: '25%'
+  },
+ textInput: {
+    borderColor: '#CCCCCC',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    height: 50,
+    fontSize: 25,
+    paddingLeft: 20,
+    paddingRight: 20
   }
 });
 export default Home;
