@@ -3,7 +3,8 @@ import { View, TextInput, Alert, StyleSheet, TouchableOpacity } from "react-nati
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import { Overlay } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import {logout} from "../services/auth/AuthService"
+import { logout } from "../services/auth/AuthService"
+import { searchLocationAutoComplete } from "../services/mapbox/MapboxService"
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import Autocomplete from 'react-native-autocomplete-input';
 
@@ -24,21 +25,33 @@ class Home extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-        query: ''
+        query: '',
+        data: [],
+        center: [3.3362400, 6.5790100]
     }
   }
   render () {
-
+    const autocompleteChanged = (text)=>{
+      this.setState({ query: text })
+      searchLocationAutoComplete(text).then((data)=>{
+        console.log(data)
+        this.setState({ data: data })
+      })
+    }
+    const centerSelected = (item)=>{
+      this.setState({ center: item.center})
+      this.setState({ query: item.place_name, data: []})
+      console.log(this.state.center)
+    }
     return (
       <View style={{flex: 1, height: "100%", width: "100%" }}>
       <MapboxGL.MapView
         styleURL={'mapbox://styles/faisalmuh786/ck84o8v2203891irqnlxkpdi3'}
         zoomLevel={16}
-        centerCoordinate={[3.3362400, 6.5790100]}
         style={{flex: 1}}>
            <MapboxGL.Camera
               zoomLevel={16}
-              centerCoordinate={[3.3362400, 6.5790100]}
+              centerCoordinate={this.state.center}
               animationMode={'flyTo'}
               animationDuration={0}
           	>
@@ -46,14 +59,17 @@ class Home extends React.Component {
       </MapboxGL.MapView>
       <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "20%", marginLeft: "12.5%"}}>
         <Autocomplete
-          data={['hello']}
+          autoCapitalize="none"
+          autoCorrect={false}
+          data={this.state.data}
           defaultValue={''}
+          value={this.state.query}
           placeholder="Search for a location"
           style={styles.TextInputStyleClass}
-          onChangeText={text => this.setState({ query: text })}
+          onChangeText={(text) => autocompleteChanged(text)}
           renderItem={({ item, i }) => (
-            <TouchableOpacity onPress={() => this.setState({ query: item })}>
-              <Text>{item}</Text>
+            <TouchableOpacity onPress={() => centerSelected(item)}>
+              <Text>{item.place_name}</Text>
             </TouchableOpacity>
           )}
         />
