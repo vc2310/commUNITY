@@ -27,7 +27,18 @@ class Home extends React.Component {
     this.state = {
         query: '',
         data: [],
-        center: [3.3362400, 6.5790100]
+        center: [3.3362400, 6.5790100],
+        addIssue: false,
+        issue: {
+          title: '',
+          description: '',
+          address: {
+            city: '',
+            province: '',
+            country: ''
+          },
+          geometry: []
+        }
     }
   }
   render () {
@@ -47,13 +58,13 @@ class Home extends React.Component {
       <View style={{flex: 1, height: "100%", width: "100%" }}>
       <MapboxGL.MapView
         styleURL={'mapbox://styles/faisalmuh786/ck84o8v2203891irqnlxkpdi3'}
-        zoomLevel={16}
+        zoomLevel={1}
         style={{flex: 1}}>
            <MapboxGL.Camera
-              zoomLevel={16}
+              zoomLevel={12}
               centerCoordinate={this.state.center}
               animationMode={'flyTo'}
-              animationDuration={0}
+              animationDuration={2000}
           	>
           </MapboxGL.Camera>
       </MapboxGL.MapView>
@@ -73,6 +84,31 @@ class Home extends React.Component {
             </TouchableOpacity>
           )}
         />
+      </View>
+      <View style={{position: 'absolute', width: "75%", marginTop: "180%", marginLeft: "82.5%"}}>
+      <Button onPress={()=> this.setState({addIssue: true})}>
+        <Text>+</Text>
+      </Button>
+      <Overlay isVisible={this.state.addIssue} fullScreen={true} onBackdropPress={()=> this.setState({addIssue: false})}>
+        <Container>
+          <View style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+            <H1>Report Issue</H1>
+            <TextInput stye={{width: "75%"}}
+              onChangeText={(title) => this.setState({issue: {title: title}})}
+              placeholder="Title" />
+            <TextInput stye={{width: "75%"}}
+              onChangeText={(description) => this.setState({issue: {description: description}})}
+              placeholder="Description" />
+            <Button>
+              <Text onPress={()=> this.setState({addIssue: false})}>Back</Text>
+            </Button>
+          </View>
+        </Container>
+      </Overlay>
       </View>
     </View>
     );
