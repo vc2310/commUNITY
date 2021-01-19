@@ -3,7 +3,6 @@ import { View, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView } from
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import { Overlay } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { logout } from "../services/auth/AuthService"
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import LocationAutocomplete from '../components/LocationAutocomplete'
 import CreateIssuePage from '../components/CreateIssuePage'
@@ -64,7 +63,7 @@ class Home extends React.Component {
         <Text>+</Text>
       </Button>
       <Overlay isVisible={this.state.addIssue} fullScreen={true} onBackdropPress={()=> this.setState({addIssue: false})}>
-        <CreateIssuePage/>
+        <CreateIssuePage close={()=> this.setState({addIssue: false})}/>
       </Overlay>
       </View>
     </View>

@@ -4,6 +4,7 @@ import { searchLocationAutoComplete } from "../services/mapbox/MapboxService"
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import LocationAutocomplete from '../components/LocationAutocomplete'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { getUser, logout } from "../services/auth/AuthService"
 
 class CreateIssuePage extends React.Component {
   constructor(props){
@@ -19,9 +20,17 @@ class CreateIssuePage extends React.Component {
         },
         geometry: []
       },
-      images: []
+      images: [],
+      createdBy: '',
     }
 
+  }
+  componentDidMount() {
+    getUser().then((res)=> {
+      res.user.id.then((id)=> {
+        this.setState({createdBy: id})})
+
+    })
   }
 
 
@@ -71,10 +80,10 @@ class CreateIssuePage extends React.Component {
         </View>
         <View stye={{backgroundColor: 'black'}}>
           <TextInput stye={styles.textInput}
-            onChangeText={(title) => this.setState({issue: {title: title}})}
+            onChangeText={(title) => this.setState({issue: {...this.state.issue, title: title}})}
             placeholder="Title" />
           <TextInput stye={styles.textInput}
-            onChangeText={(description) => this.setState({issue: {description: description}})}
+            onChangeText={(description) => this.setState({issue: {...this.state.issue, description: description}})}
             placeholder="Description" />
         </View>
         <View style={{
@@ -94,11 +103,34 @@ class CreateIssuePage extends React.Component {
           </Button>
           </View>
           <View>
-            <LocationAutocomplete onSelect={(item) => {}}/>
+            <LocationAutocomplete onSelect={(selected) => {
+              var city = ''
+              var province = ''
+              var country = ''
+              selected.context.map((item, index)=>{
+                if (item.id.includes('place')){
+                  city = item.text
+                }
+                else if (item.id.includes('region')){
+                  province = item.text
+                }
+                else if (item.id.includes('country')){
+                  country = item.text
+                }
+
+              })
+              this.setState({ issue:{... this.state.issue,
+                address: {city: city, province: province, country: country},
+                geometry: selected.center}})
+              this.setState({})
+            }}/>
             </View>
           <View style={{position: 'absolute', width: "75%", marginTop: "180%", marginLeft: "12.5%"}}>
             <Button>
-              <Text onPress={()=> this.setState({addIssue: false})}>Back</Text>
+              <Text onPress={()=> this.props.close()}>Back</Text>
+            </Button>
+            <Button>
+              <Text onPress={()=> {console.log(this.state)}}>Submit</Text>
             </Button>
           </View>
         </View>

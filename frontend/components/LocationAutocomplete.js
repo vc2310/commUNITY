@@ -18,7 +18,6 @@ class LocationAutocomplete extends React.Component {
     const autocompleteChanged = (text)=>{
       this.setState({ query: text })
       searchLocationAutoComplete(text).then((data)=>{
-        console.log(data)
         this.setState({ data: data })
       })
     }

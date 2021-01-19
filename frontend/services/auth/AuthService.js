@@ -112,19 +112,26 @@ export const logout = async() => {
 export const getUser = async() => {
   return new Promise((resolve, reject) => {
     try{
-      user = {
+
+      var user = {
         email: '',
         firstName: '',
         lastName: '',
         token: '',
         id: ''
       }
-      AsyncStorage.getItem('email').then((res)=>{user.email = res})
-      AsyncStorage.removeItem('firstName').then((res)=>{user.firstName = res})
-      AsyncStorage.removeItem('lastName').then((res)=>{user.lastName = res})
-      AsyncStorage.removeItem('token').then((res)=>{user.token = res})
-      AsyncStorage.removeItem('id').then((res)=>{user.id = res})
-      resolve(user)
+      AsyncStorage.getItem('email').then((email)=>{user.email = email})
+      AsyncStorage.getItem('firstName').then((firstName)=>{user.firstName = firstName})
+      AsyncStorage.getItem('lastName').then((lastName)=>{user.lastName = lastName})
+      AsyncStorage.getItem('token').then((res)=>{user.token = res})
+      AsyncStorage.getItem('id').then((res)=>{user.id = res})
+      resolve({user: {
+        email: AsyncStorage.getItem('email'),
+        firstName: AsyncStorage.getItem('firstName'),
+        lastName: AsyncStorage.getItem('lastName'),
+        token: AsyncStorage.getItem('token'),
+        id: AsyncStorage.getItem('id')
+      }})
     } catch(error){
       reject(error)
     }
