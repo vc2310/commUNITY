@@ -6,6 +6,8 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { logout } from "../services/auth/AuthService"
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import LocationAutocomplete from '../components/LocationAutocomplete'
+import CreateIssuePage from '../components/CreateIssuePage'
+
 MapboxGL.setAccessToken("pk.eyJ1IjoiZmFpc2FsbXVoNzg2IiwiYSI6ImNrODRucXg2YjBjMnAzbW1yNjZ3ZHNqd3oifQ.-BuJJq_CEkUXCMjeypdSdg");
 
 class Home extends React.Component {
@@ -62,33 +64,7 @@ class Home extends React.Component {
         <Text>+</Text>
       </Button>
       <Overlay isVisible={this.state.addIssue} fullScreen={true} onBackdropPress={()=> this.setState({addIssue: false})}>
-        <ScrollView>
-          <View style={styles.inputContainer}>
-          <View >
-            <H1>Report Issue</H1>
-          </View>
-          <View style={{
-            flex: 1,
-          }}>
-            <TextInput stye={styles.textInput}
-              onChangeText={(title) => this.setState({issue: {title: title}})}
-              placeholder="Title" />
-            <TextInput stye={styles.textInput}
-              onChangeText={(description) => this.setState({issue: {description: description}})}
-              placeholder="Description" />
-            </View>
-            <View style={{
-              width: '100%',
-            }}>
-            <LocationAutocomplete onSelect={(item) => {}}/>
-            </View>
-            <View style={{position: 'absolute', width: "75%", marginTop: "180%", marginLeft: "12.5%"}}>
-              <Button>
-                <Text onPress={()=> this.setState({addIssue: false})}>Back</Text>
-              </Button>
-            </View>
-          </View>
-        </ScrollView>
+        <CreateIssuePage/>
       </Overlay>
       </View>
     </View>
@@ -110,13 +86,8 @@ const styles = StyleSheet.create({
     paddingTop: '25%'
   },
  textInput: {
-    borderColor: '#CCCCCC',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    height: 50,
-    fontSize: 25,
-    paddingLeft: 20,
-    paddingRight: 20
+   backgroundColor: "#3f51b5",
+   color: "#ffffff", //Expecting this to change input text color
   }
 });
 export default Home;
