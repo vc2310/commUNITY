@@ -9,44 +9,7 @@ import CreateIssuePage from '../components/CreateIssuePage'
 import { getIssues } from "../services/issue/IssueService"
 
 MapboxGL.setAccessToken("pk.eyJ1IjoiZmFpc2FsbXVoNzg2IiwiYSI6ImNrODRucXg2YjBjMnAzbW1yNjZ3ZHNqd3oifQ.-BuJJq_CEkUXCMjeypdSdg");
-const featureCollection = {
-  type: 'FeatureCollection',
-  features: [
-    {
-      type: 'Feature',
-      id: '9d10456e-bdda-4aa9-9269-04c1667d4552',
-      properties: {
-        icon: 'example',
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: [-117.20611157485, 52.180961084261],
-      },
-    },
-    {
-      type: 'Feature',
-      id: '9d10456e-bdda-4aa9-9269-04c1667d4552',
-      properties: {
-        icon: 'airport-15',
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: [-117.205908, 52.180843],
-      },
-    },
-    {
-      type: 'Feature',
-      id: '9d10456e-bdda-4aa9-9269-04c1667d4552',
-      properties: {
-        icon: 'pin',
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: [-117.206562, 52.180797],
-      },
-    },
-  ],
-};
+
 class Home extends React.Component {
   static navigationOptions = {
     title: 'Home',
@@ -64,18 +27,16 @@ class Home extends React.Component {
     this.state = {
         query: '',
         data: [],
-        center: [3.3362400, 6.5790100],
+        center: [-79.6665, 43.4474],
         addIssue: false,
         issues: []
     }
   }
 
   centerChanged(){
-    console.log(this.state.center)
     getIssues().then((response)=>{
-      console.log(response)
       var featuresObject = []
-      response.map((item, index)=>{
+      response.issues.map((item, index)=>{
         featuresObject.push({
                 type: "Feature",
                 geometry: {
@@ -89,30 +50,31 @@ class Home extends React.Component {
       console.log(err)
     })
   }
-   renderAnnotations() {
-     const items = [];
-     for (let i = 0; i < this.state.issues.length; i++) {
-       const id = `pointAnnotation${i}`;
-       items.push(
-          // <MapboxGL.PointAnnotation
-          //   key={id}
-          //   id={id}
-          //   coordinate={this.state.issues[i].geometry.coordinates}
-          //   title={this.state.issues[i].title}>
-          //   <View style={styles.annotationContainer} />
-          //   <MapboxGL.Callout title="This is a sample with image" />
-          // </MapboxGL.PointAnnotation>,
+  renderAnnotations() {
+   const items = [];
 
-          <MapboxGL.PointAnnotation
-             key="key1"
-             id="id1"
-             title="Test"
-             coordinate={this.state.center}>
-          </MapboxGL.PointAnnotation>,
-        );
-     }
-     return items
+   for (let i = 0; i < this.state.issues.length; i++) {
+     const coordinate = this.state.issues[i].geometry.coordinates;
+     const title = `Longitude: ${this.state.issues[i].geometry.coordinates[0]} Latitude: ${
+       this.state.issues[i].geometry.coordinates[1]
+     }`;
+     const id = `pointAnnotation${i}`;
+
+     items.push(
+       <MapboxGL.PointAnnotation
+         key={id}
+         id={id}
+         title="Test"
+         selected={i === 0}
+         onSelected={()=>{}}
+         onDeselected={()=>{}}
+         coordinate={coordinate}
+       >
+       </MapboxGL.PointAnnotation>,
+     );
    }
+   return items;
+ }
 
   render () {
     return (
@@ -129,12 +91,7 @@ class Home extends React.Component {
               onRegionDidChange={this.centerChanged()}
           	>
           </MapboxGL.Camera>
-          <MapboxGL.ShapeSource
-            id="exampleShapeSource"
-            shape={featureCollection}
-          >
-            <MapboxGL.SymbolLayer id="icon" style={styles.icon} />
-          </MapboxGL.ShapeSource>
+          {this.renderAnnotations()}
       </MapboxGL.MapView>
       <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "20%", marginLeft: "12.5%"}}>
         <LocationAutocomplete onSelect={(item) => {this.setState({ center: item.center})}}/>
@@ -164,7 +121,13 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     width: 45,
   },
-
+  annotationFill: {
+      width: 45 - 3,
+      height: 45 - 3,
+      borderRadius: (45 - 3) / 2,
+      backgroundColor: 'orange',
+      transform: [{scale: 0.6}],
+    },
   MainContainer :{
 
   // Setting up View inside content in Vertically center.
