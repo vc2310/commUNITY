@@ -5,6 +5,7 @@ import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import LocationAutocomplete from '../components/LocationAutocomplete'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { getUser, logout } from "../services/auth/AuthService"
+import { createIssue } from "../services/issue/IssueService"
 
 class CreateIssuePage extends React.Component {
   constructor(props){
@@ -18,60 +19,68 @@ class CreateIssuePage extends React.Component {
           province: '',
           country: ''
         },
-        geometry: []
+        geometry: [],
+        images: [],
+        createdBy: '',
       },
-      images: [],
-      createdBy: '',
     }
 
   }
   componentDidMount() {
     getUser().then((res)=> {
       res.user.id.then((id)=> {
-        this.setState({createdBy: id})})
+        this.setState({issue: {...this.state.issue, createdBy: id}})})
 
     })
   }
 
+  submit(){
+    console.log(this.state)
+    createIssue(this.state.issue).then((res)=>{
+      console.log(res)
+      if (res){
+        this.props.close()
+      }
+    }).catch((error)=>{console.log(error)})
+  }
 
   render () {
     const options = {
-   title: 'Load Photo',
-   customButtons: [
-     { name: 'button_id_1', title: 'CustomButton 1' },
-     { name: 'button_id_2', title: 'CustomButton 2' }
-   ],
-   storageOptions: {
-     skipBackup: true,
-     path: 'images',
-   },
-   multiple: true,
- };
+     title: 'Load Photo',
+     customButtons: [
+       { name: 'button_id_1', title: 'CustomButton 1' },
+       { name: 'button_id_2', title: 'CustomButton 2' }
+     ],
+     storageOptions: {
+       skipBackup: true,
+       path: 'images',
+     },
+     multiple: true,
+   };
 
- const showImagePicker = (): void => {
+     const showImagePicker = (): void => {
+       launchImageLibrary(options, (response) => {
+         console.log('Response = ', response);
 
-   console.log('pressed')
-   launchImageLibrary(options, (response) => {
-     console.log('Response = ', response);
+         if (response.didCancel) {
+           console.log('User cancelled image picker');
+         } else if (response.error) {
+           console.log('ImagePicker Error: ', response.error);
+         } else if (response.customButton) {
+           console.log('User tapped custom button: ', response.customButton);
+           Alert.alert(response.customButton);
+         } else {
+           // You can also display the image using data:
+           // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+           var temp = this.state.issue.images
+           console.log(response)
+           temp.push(response.uri)
+           this.setState({issue: {...this.state.issue, images: temp}});
+           console.log(this.state.images)
+         }
+       });
+    };
 
-     if (response.didCancel) {
-       console.log('User cancelled image picker');
-     } else if (response.error) {
-       console.log('ImagePicker Error: ', response.error);
-     } else if (response.customButton) {
-       console.log('User tapped custom button: ', response.customButton);
-       Alert.alert(response.customButton);
-     } else {
-       // You can also display the image using data:
-       // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-       var temp = this.state.images
-       console.log(response)
-       temp.push(response.uri)
-       this.setState({images: temp});
-       console.log(this.state.images)
-     }
-   });
- };
     return (
       <ScrollView>
         <View style={styles.inputContainer}>
@@ -92,7 +101,7 @@ class CreateIssuePage extends React.Component {
           <ScrollView
           horizontal={true}
           >
-          {this.state.images.map((img, index) => {
+          {this.state.issue.images.map((img, index) => {
             return <Image source={{uri: img }} key={index} style={{width: 100, height: 100}}/>;
           })}
           </ScrollView>
@@ -130,7 +139,7 @@ class CreateIssuePage extends React.Component {
               <Text onPress={()=> this.props.close()}>Back</Text>
             </Button>
             <Button>
-              <Text onPress={()=> {console.log(this.state)}}>Submit</Text>
+              <Text onPress={(e)=> {this.submit()}}>Submit</Text>
             </Button>
           </View>
         </View>

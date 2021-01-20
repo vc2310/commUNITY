@@ -21,4 +21,4 @@ const tokenSchema = new mongoose.Schema({
 
 }, {timestamps: true});
 
-export default mongoose.model('token', tokenSchema, "myCollection");
+export default mongoose.model('token', tokenSchema);

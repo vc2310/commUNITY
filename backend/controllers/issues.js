@@ -14,7 +14,8 @@ export const createIssue = (req, res, next) => {
   }
 
   User.findById(issue.createdBy).then((users)=>{
-    if (users.length == 0){
+
+    if (!users || users.length == 0){
         return res.status(400).json({
           errors: {
             message: 'User not found',
@@ -25,7 +26,8 @@ export const createIssue = (req, res, next) => {
       title: issue.title,
       description: issue.description,
       address: issue.address,
-      createdBy: issue.createdBy
+      createdBy: issue.createdBy,
+      geometry: {type: 'Point', coordinates: issue.geometry}
     }
     const finalIssue = new Issue(issueObj);
     finalIssue.setDate();

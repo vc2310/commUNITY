@@ -5,7 +5,7 @@ import router from './router';
 import bodyParser from 'body-parser';
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/user", {
+mongoose.connect("mongodb://localhost:27017/commUNITYdev", {
   useUnifiedTopology: true,
   useNewUrlParser: true
 });

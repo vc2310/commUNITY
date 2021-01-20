@@ -40,4 +40,4 @@ issueSchema.methods.toJSON = function() {
       };
 };
 
-export default mongoose.model('issue', issueSchema, "myCollection");
+export default mongoose.model('issue', issueSchema);

@@ -55,4 +55,4 @@ userSchema.methods.generateJWT = function() {
   }, 'secret');
 }
 // Export Mongoose model
-export default mongoose.model('user', userSchema, "myCollection");
+export default mongoose.model('user', userSchema);
