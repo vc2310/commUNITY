@@ -33,7 +33,8 @@ class Home extends React.Component {
     }
   }
 
-  centerChanged(){
+  centerChanged(event){
+    console.log('getting issues', event)
     getIssues().then((response)=>{
       var featuresObject = []
       response.issues.map((item, index)=>{
@@ -82,13 +83,13 @@ class Home extends React.Component {
       <MapboxGL.MapView
         styleURL={'mapbox://styles/faisalmuh786/ck84o8v2203891irqnlxkpdi3'}
         zoomLevel={1}
-        style={{flex: 1}}>
+        style={{flex: 1}}
+        onRegionDidChange={(event)=>{this.centerChanged(event)}}>
            <MapboxGL.Camera
               zoomLevel={12}
               centerCoordinate={this.state.center}
               animationMode={'flyTo'}
               animationDuration={2000}
-              onRegionDidChange={this.centerChanged()}
           	>
           </MapboxGL.Camera>
           {this.renderAnnotations()}
