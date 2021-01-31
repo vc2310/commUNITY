@@ -15,7 +15,7 @@ const issueSchema = new Schema({
         ref: 'Users'
     },
     created: Date,
-    upVotes: [{ // required
+    upVotes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users'
     }]

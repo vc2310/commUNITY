@@ -29,24 +29,16 @@ class Home extends React.Component {
         data: [],
         center: [-79.6665, 43.4474],
         addIssue: false,
-        issues: []
+        issues: [],
+        details: false,
+        detailsID: ''
     }
   }
 
   centerChanged(event){
     console.log('getting issues', event)
     getIssues().then((response)=>{
-      var featuresObject = []
-      response.issues.map((item, index)=>{
-        featuresObject.push({
-                type: "Feature",
-                geometry: {
-                    type: "Point",
-                    coordinates: item.geometry.coordinates
-                }
-            })
-      })
-      this.setState({issues: featuresObject})
+      this.setState({issues: response.issues})
     }).catch((err)=>{
       console.log(err)
     })
@@ -63,12 +55,16 @@ class Home extends React.Component {
 
      items.push(
        <MapboxGL.PointAnnotation
-         key={id}
-         id={id}
-         title="Test"
-         selected={i === 0}
-         onSelected={()=>{}}
-         onDeselected={()=>{}}
+         key={this.state.issues[i].id}
+         id={this.state.issues[i].id}
+         title={this.state.issues[i].title}
+         onSelected={()=>{
+           this.setState({details: true})
+           this.setState({detailsID: this.state.issues[i].id})
+         }}
+         onDeselected={()=>{
+           this.setState({details: false})
+           this.setState({detailsID: ''})}}
          coordinate={coordinate}
        >
        </MapboxGL.PointAnnotation>,
@@ -103,6 +99,9 @@ class Home extends React.Component {
       </Button>
       <Overlay isVisible={this.state.addIssue} fullScreen={true} onBackdropPress={()=> this.setState({addIssue: false})}>
         <CreateIssuePage close={()=> this.setState({addIssue: false})}/>
+      </Overlay>
+      <Overlay isVisible={this.state.details} onBackdropPress={()=> this.setState({details: false, detailsID: ''})}>
+        <Text>clicked details {this.state.detailsID}</Text>
       </Overlay>
       </View>
     </View>

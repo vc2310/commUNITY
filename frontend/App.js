@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Login from "./components/Login"
 import Home from "./components/Home"
 import Profile from "./components/Profile"
+import Search from "./components/Search"
 import {isLoggedIn} from "./services/auth/AuthService"
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
@@ -18,6 +19,15 @@ export const Main = createBottomTabNavigator(
         tabBarLabel: "Home",
         tabBarIcon: ({ tintColor }) => (
           <FontAwesome name="home" size={30} color={tintColor} />
+        )
+      }
+    },
+    Search: {
+      screen: Search,
+      navigationOptions: {
+        tabBarLabel: "Search",
+        tabBarIcon: ({ tintColor }) => (
+          <FontAwesome name="search" size={30} color={tintColor} />
         )
       }
     },
@@ -45,6 +55,7 @@ const createRootNavigator = (signedIn = false) => {
     {
       Home: { screen: Main },
       Login: { screen: Login },
+      Search: { screen: Search },
     },
     {
       initialRouteName: signedIn ? "Home" : "Login"

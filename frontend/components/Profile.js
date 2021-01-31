@@ -51,13 +51,13 @@ class Profile extends React.Component {
     }
     }
     return (
-      <Container>
+      <Container style={{backgroundColor: '#1c2636'}}>
       <View style={{
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
       }}>
-        <Text>{this.state.firstName} {this.state.lastName}</Text>
+        <H1 style={{color: 'white'}}>{this.state.firstName} {this.state.lastName}</H1>
       </View>
       <View style={{
         flex: 1,
