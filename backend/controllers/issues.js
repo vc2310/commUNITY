@@ -58,3 +58,68 @@ export const getIssues = (req, res, next) => {
       res.json({issues: json})
     });
 };
+
+export const upVoteIssues = (req, res, next) => {
+  const { body: { upvote } } = req;
+  console.log(upvote)
+  if(!upvote.createdBy || !upvote.issueID) {
+    return res.status(400).json({
+      errors: {
+        message: 'Missing fields.',
+      },
+    });
+  }
+
+  User.findById(upvote.createdBy).then((users)=>{
+
+    if (!users || users.length == 0){
+        return res.status(400).json({
+          errors: {
+            message: 'User not found',
+          },
+        });
+    }
+    Issue.findById(upvote.issueID).then((issue)=>{
+      if (issue.upVotes.includes(upvote.createdBy)){
+          Issue.updateOne({_id: upvote.issueID}, {$pull: {upVotes: upvote.createdBy}}).then((issue)=>{
+            Issue.findById(upvote.issueID).then((issue)=>{
+              return res.json({issue: issue})
+            }, (error)=>{
+              console.log(error)
+            });
+          }, (error)=>{
+            console.log(error)
+          });
+      }
+      else{
+        Issue.updateOne({_id: upvote.issueID}, {$push: {upVotes: [upvote.createdBy]}}).then((issue)=>{
+          Issue.findById(upvote.issueID).then((issue)=>{
+            return res.json({issue: issue})
+          }, (error)=>{
+            console.log(error)
+          });
+        }, (error)=>{
+          console.log(error)
+              return res.status(400).json({
+                errors: {
+                  message: 'Something went wrong.',
+                },
+              });
+        });
+      }
+    }, (error)=>{
+        console.log(error)
+        return res.status(400).json({
+          errors: {
+            message: 'Something went wrong.',
+          },
+        });
+    });
+  }, (error)=>{
+    return res.status(400).json({
+      errors: {
+        message: 'User not found',
+      },
+    });
+  })
+};

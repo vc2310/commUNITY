@@ -22,6 +22,32 @@ export const createIssue = (issue) => {
   })
 }
 
+export const upVoteIssue = (createdBy, issueID) => {
+  var upvote = {createdBy: createdBy, issueID: issueID}
+  console.log(upvote)
+  return new Promise((resolve, reject) => {
+    var body = JSON.stringify({upvote})
+    fetch('http://localhost:3000/v1/upVoteIssue', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    }).then((response) => {
+      console.log(response)
+        if (response.status === 200){
+          response.json().then((data)=>{
+            resolve(data)
+          })
+        }
+    }).catch((error) => {
+        console.error(error);
+    });
+
+  })
+}
+
 export const getIssues = () => {
   return new Promise((resolve, reject) => {
     fetch('http://localhost:3000/v1/getIssues', {

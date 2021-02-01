@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 // Import index action from users controller
 import { login, signup } from './controllers/users';
-import { createIssue, getIssues } from './controllers/issues';
+import { createIssue, getIssues, upVoteIssues } from './controllers/issues';
 
 // Initialize the router
 const router = Router();
@@ -14,5 +14,8 @@ router.route('/signup').post(signup);
 router.route('/createIssue').post(createIssue);
 
 router.route('/getIssues').get(getIssues);
+
+router.route('/upVoteIssue').post(upVoteIssues);
+
 
 export default router;

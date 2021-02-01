@@ -4,7 +4,7 @@ import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import LocationAutocomplete from '../components/LocationAutocomplete'
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { getUser, logout } from "../services/auth/AuthService"
-import { getIssues } from "../services/issue/IssueService"
+import { getIssues, upVoteIssue } from "../services/issue/IssueService"
 
 class Search extends React.Component {
   static navigationOptions = {
@@ -22,13 +22,34 @@ class Search extends React.Component {
     super(props)
     this.state =  {
       issues: [],
-      center: []
+      center: [],
+      userID: ''
     }
   }
   componentDidMount() {
+    getUser().then((res)=> {
+      res.user.id.then((id)=> {
+        this.setState({userID: id})
+      })
+    })
     getIssues().then((response)=>{
       console.log(response)
-      this.setState({issues: response.issues})
+      var tempIssues = response.issues
+      tempIssues.sort((a,b)=> (a.upVotes.length > b.upVotes.length) ? -1 : (a.upVotes.length < b.upVotes.length) ? 1 : 0)
+      this.setState({issues: tempIssues})
+    }).catch((err)=>{
+      console.log(err)
+    })
+  }
+  upvote(issueID){
+    console.log(this.state.userID, issueID)
+    upVoteIssue(this.state.userID, issueID).then((response)=>{
+      console.log(response)
+      var issues = this.state.issues
+      objIndex = this.state.issues.findIndex((obj => obj.id == issueID));
+      issues[objIndex].upVotes = response.issue.upVotes
+      issues.sort((a,b)=> (a.upVotes.length > b.upVotes.length) ? -1 : (a.upVotes.length < b.upVotes.length) ? 1 : 0)
+      this.setState({issues: issues})
     }).catch((err)=>{
       console.log(err)
     })
@@ -46,7 +67,7 @@ class Search extends React.Component {
                       </View>
                       <View>
                         <View style={{flexDirection: 'column'}}>
-                          <Button>
+                          <Button onPress={(e)=> {this.upvote(item.id)}}>
                               <Text>
                                 ^
                               </Text>
