@@ -24,6 +24,8 @@ const app = express();
 // Logger that outputs all requests into the console
 app.use(morgan('combined'));
 
+app.use(express.static(__dirname + '/public'));
+
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json())
 

@@ -36,7 +36,13 @@ class CreateIssuePage extends React.Component {
 
   submit(){
     console.log(this.state)
-    createIssue(this.state.issue).then((res)=>{
+    let formdata = new FormData();
+    this.state.issue.images.map((img, index) => {
+      formdata.append("multiple_images", {uri: img.uri, name: img.fileName, type: img.type})
+    })
+    formdata.append("issue", JSON.stringify(this.state.issue))
+    console.log(formdata)
+    createIssue(formdata).then((res)=>{
       console.log(res)
       if (res){
         this.props.close()
@@ -74,7 +80,7 @@ class CreateIssuePage extends React.Component {
            // const source = { uri: 'data:image/jpeg;base64,' + response.data };
            var temp = this.state.issue.images
            console.log(response)
-           temp.push(response.uri)
+           temp.push(response)
            this.setState({issue: {...this.state.issue, images: temp}});
            console.log(this.state.images)
          }
@@ -102,7 +108,7 @@ class CreateIssuePage extends React.Component {
           horizontal={true}
           >
           {this.state.issue.images.map((img, index) => {
-            return <Image source={{uri: img }} key={index} style={{width: 100, height: 100}}/>;
+            return <Image source={{uri: img.uri }} key={index} style={{width: 100, height: 100}}/>;
           })}
           </ScrollView>
           <Button onPress={(e)=>{

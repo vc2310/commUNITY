@@ -6,6 +6,7 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import LocationAutocomplete from '../components/LocationAutocomplete'
 import CreateIssuePage from '../components/CreateIssuePage'
+import ViewIssue from '../components/ViewIssue'
 import { getIssues } from "../services/issue/IssueService"
 
 MapboxGL.setAccessToken("pk.eyJ1IjoiZmFpc2FsbXVoNzg2IiwiYSI6ImNrODRucXg2YjBjMnAzbW1yNjZ3ZHNqd3oifQ.-BuJJq_CEkUXCMjeypdSdg");
@@ -100,8 +101,8 @@ class Home extends React.Component {
       <Overlay isVisible={this.state.addIssue} fullScreen={true} onBackdropPress={()=> this.setState({addIssue: false})}>
         <CreateIssuePage close={()=> this.setState({addIssue: false})}/>
       </Overlay>
-      <Overlay isVisible={this.state.details} onBackdropPress={()=> this.setState({details: false, detailsID: ''})}>
-        <Text>clicked details {this.state.detailsID}</Text>
+      <Overlay isVisible={this.state.details} fullScreen={true} onBackdropPress={()=> this.setState({details: false, detailsID: ''})}>
+        <ViewIssue close={()=> this.setState({details: false})} id={this.state.detailsID}></ViewIssue>
       </Overlay>
       </View>
     </View>
