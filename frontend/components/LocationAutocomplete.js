@@ -38,8 +38,8 @@ class LocationAutocomplete extends React.Component {
           style={styles.TextInputStyleClass}
           onChangeText={(text) => autocompleteChanged(text)}
           renderItem={({ item, i }) => (
-            <TouchableOpacity onPress={() => handlePress(item)}>
-              <Text>{item.place_name}</Text>
+            <TouchableOpacity style={{height: 30, justifyContent: "center"}} onPress={() => handlePress(item)}>
+              <Text style={{fontWeight: "bold"}}>{item.place_name}</Text>
             </TouchableOpacity>
           )}
         />
@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
 
   //Set background color of Text Input.
    backgroundColor : "#FFFFFF",
+   fontWeight: "bold",
 
  },
  inputContainer: {

@@ -50,6 +50,14 @@ class CreateIssuePage extends React.Component {
     }).catch((error)=>{console.log(error)})
   }
 
+  submitDisabled(){
+    if (this.state.issue.title !== '' && this.state.issue.description !== ''
+        && this.state.issue.geometry.length !== 0 && this.state.issue.images.length !== 0){
+      return false
+    }
+    return true
+  }
+
   render () {
     const options = {
      title: 'Load Photo',
@@ -97,9 +105,12 @@ class CreateIssuePage extends React.Component {
           <TextInput stye={styles.textInput}
             onChangeText={(title) => this.setState({issue: {...this.state.issue, title: title}})}
             placeholder="Title" />
-          <TextInput stye={styles.textInput}
-            onChangeText={(description) => this.setState({issue: {...this.state.issue, description: description}})}
-            placeholder="Description" />
+          <View style={styles.textAreaContainer} >
+            <TextInput stye={styles.textArea}
+              numberOfLines={9}
+              onChangeText={(description) => this.setState({issue: {...this.state.issue, description: description}})}
+              placeholder="Description" />
+          </View>
         </View>
         <View style={{
           width: '100%',
@@ -107,15 +118,15 @@ class CreateIssuePage extends React.Component {
           <ScrollView
           horizontal={true}
           >
+            <TouchableOpacity onPress={(e)=>{
+              showImagePicker()
+            }} style={{backgroundColor: 'grey', width: 100, height: 100, justifyContent: "center"}}>
+              <Text>Load Photo</Text>
+            </TouchableOpacity>
           {this.state.issue.images.map((img, index) => {
             return <Image source={{uri: img.uri }} key={index} style={{width: 100, height: 100}}/>;
           })}
           </ScrollView>
-          <Button onPress={(e)=>{
-            showImagePicker()
-          }}>
-            <Text>Load Photo</Text>
-          </Button>
           </View>
           <View>
             <LocationAutocomplete onSelect={(selected) => {
@@ -141,11 +152,11 @@ class CreateIssuePage extends React.Component {
             }}/>
             </View>
           <View style={{position: 'absolute', width: "75%", marginTop: "180%", marginLeft: "12.5%"}}>
-            <Button>
-              <Text onPress={()=> this.props.close()}>Back</Text>
+            <Button onPress={()=> this.props.close()}>
+              <Text>Back</Text>
             </Button>
-            <Button>
-              <Text onPress={(e)=> {this.submit()}}>Submit</Text>
+            <Button disabled={this.submitDisabled()}  onPress={(e)=> {this.submit()}}>
+              <Text>Submit</Text>
             </Button>
           </View>
         </View>
@@ -167,8 +178,18 @@ const styles = StyleSheet.create({
     paddingTop: '25%'
   },
  textInput: {
+   height: '40%',
    backgroundColor: "#3f51b5",
    color: "#ffffff", //Expecting this to change input text color
+ },
+  textAreaContainer: {
+    borderColor: 'grey',
+    borderWidth: 1,
+    padding: 5
+  },
+  textArea: {
+    height: 150,
+    justifyContent: "flex-start"
   }
 });
 
