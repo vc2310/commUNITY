@@ -25,7 +25,7 @@ export const Main = createBottomTabNavigator(
     Search: {
       screen: Search,
       navigationOptions: {
-        tabBarLabel: "Search",
+        tabBarLabel: "Issues",
         tabBarIcon: ({ tintColor }) => (
           <FontAwesome name="search" size={30} color={tintColor} />
         )

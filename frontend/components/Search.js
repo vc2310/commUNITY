@@ -28,6 +28,11 @@ class Search extends React.Component {
     }
   }
   componentDidMount() {
+    this.load()
+    this.props.navigation.addListener('willFocus', this.load)
+  }
+  load = () => {
+
     getUser().then((res)=> {
       res.user.id.then((id)=> {
         this.setState({userID: id})
@@ -43,7 +48,7 @@ class Search extends React.Component {
     }).catch((err)=>{
       console.log(err)
     })
-  }
+    }
   upvote(issueID){
     console.log(this.state.userID, issueID)
     upVoteIssue(this.state.userID, issueID).then((response)=>{
