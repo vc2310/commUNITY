@@ -23,7 +23,8 @@ class Search extends React.Component {
     this.state =  {
       issues: [],
       center: [],
-      userID: ''
+      userID: '',
+      userCity: ''
     }
   }
   componentDidMount() {
@@ -31,9 +32,11 @@ class Search extends React.Component {
       res.user.id.then((id)=> {
         this.setState({userID: id})
       })
+      res.user.address.city.then((city)=> {
+        this.setState({userCity: city})
+      })
     })
     getIssues().then((response)=>{
-      console.log(response)
       var tempIssues = response.issues
       tempIssues.sort((a,b)=> (a.upVotes.length > b.upVotes.length) ? -1 : (a.upVotes.length < b.upVotes.length) ? 1 : 0)
       this.setState({issues: tempIssues})
@@ -44,7 +47,6 @@ class Search extends React.Component {
   upvote(issueID){
     console.log(this.state.userID, issueID)
     upVoteIssue(this.state.userID, issueID).then((response)=>{
-      console.log(response)
       var issues = this.state.issues
       objIndex = this.state.issues.findIndex((obj => obj.id == issueID));
       issues[objIndex].upVotes = response.issue.upVotes
@@ -67,11 +69,11 @@ class Search extends React.Component {
                       </View>
                       <View>
                         <View style={{flexDirection: 'column'}}>
-                          <Button onPress={(e)=> {this.upvote(item.id)}}>
+                          {item.address.city === this.state.userCity && <Button onPress={(e)=> {this.upvote(item.id)}}>
                               <Text>
                                 ^
                               </Text>
-                          </Button>
+                          </Button>}
                           <Text>
                             {item.upVotes.length}
                           </Text>

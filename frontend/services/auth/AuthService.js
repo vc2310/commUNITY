@@ -21,11 +21,15 @@ export const login = (email, password) => {
       if (response.status === 200){
         //save token
         response.json().then((data)=>{
+          console.log(data)
           try{
             AsyncStorage.setItem('email', data.user.email)
             AsyncStorage.setItem('firstName', data.user.firstName)
             AsyncStorage.setItem('lastName', data.user.lastName)
             AsyncStorage.setItem('token', data.user.token)
+            AsyncStorage.setItem('city', data.user.address.city)
+            AsyncStorage.setItem('province', data.user.address.province)
+            AsyncStorage.setItem('country', data.user.address.country)
             AsyncStorage.setItem('id', data.user._id)
           } catch(error){
             console.log(error)
@@ -45,14 +49,14 @@ export const login = (email, password) => {
   })
 }
 
-export const signup = (email, password, firstname, lastname) => {
+export const signup = (email, password, firstname, lastname, address) => {
   return new Promise((resolve, reject) => {
     var user = {
       email: email,
       password: password,
       firstName: firstname,
       lastName: lastname,
-      address: {}
+      address: address
     }
     console.log(user)
     var body = JSON.stringify({user})
@@ -74,6 +78,9 @@ export const signup = (email, password, firstname, lastname) => {
             AsyncStorage.setItem('firstName', data.user.firstName)
             AsyncStorage.setItem('lastName', data.user.lastName)
             AsyncStorage.setItem('token', data.user.token)
+            AsyncStorage.setItem('city', data.user.address.city)
+            AsyncStorage.setItem('province', data.user.address.province)
+            AsyncStorage.setItem('country', data.user.address.country)
             AsyncStorage.setItem('id', data.user._id)
           } catch(error){
             console.log(error)
@@ -101,6 +108,9 @@ export const logout = async() => {
       AsyncStorage.removeItem('firstName')
       AsyncStorage.removeItem('lastName')
       AsyncStorage.removeItem('token')
+      AsyncStorage.removeItem('city')
+      AsyncStorage.removeItem('province')
+      AsyncStorage.removeItem('country')
       AsyncStorage.removeItem('id')
       resolve(true)
     } catch(error){
@@ -112,24 +122,16 @@ export const logout = async() => {
 export const getUser = async() => {
   return new Promise((resolve, reject) => {
     try{
-
-      var user = {
-        email: '',
-        firstName: '',
-        lastName: '',
-        token: '',
-        id: ''
-      }
-      AsyncStorage.getItem('email').then((email)=>{user.email = email})
-      AsyncStorage.getItem('firstName').then((firstName)=>{user.firstName = firstName})
-      AsyncStorage.getItem('lastName').then((lastName)=>{user.lastName = lastName})
-      AsyncStorage.getItem('token').then((res)=>{user.token = res})
-      AsyncStorage.getItem('id').then((res)=>{user.id = res})
       resolve({user: {
         email: AsyncStorage.getItem('email'),
         firstName: AsyncStorage.getItem('firstName'),
         lastName: AsyncStorage.getItem('lastName'),
         token: AsyncStorage.getItem('token'),
+        address: {
+          city: AsyncStorage.getItem('city'),
+          province: AsyncStorage.getItem('province'),
+          country: AsyncStorage.getItem('country')
+        },
         id: AsyncStorage.getItem('id')
       }})
     } catch(error){

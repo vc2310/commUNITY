@@ -23,6 +23,7 @@ class Profile extends React.Component {
       firstName: '',
       lastName: '',
       token: '',
+      address: {city: '', province: '', country: ''},
       id: ''
     }
   }
@@ -36,7 +37,14 @@ class Profile extends React.Component {
         this.setState({lastName: lastName})})
       res.user.lastName.then((token)=> {
         this.setState({token: token})})
-
+      res.user.address.city.then((city)=> {
+        res.user.address.province.then((province)=> {
+          res.user.address.country.then((country)=> {
+            console.log(city, province, country)
+              this.setState({address: {city: city, province: province, country: country}})
+            })
+          })
+        })
     })
   }
   render () {
@@ -65,6 +73,9 @@ class Profile extends React.Component {
         alignItems: "center",
       }}>
         <Text>{this.state.email}</Text>
+        <Text>{this.state.address.city}</Text>
+        <Text>{this.state.address.province}</Text>
+        <Text>{this.state.address.country}</Text>
       </View>
         <View style={{
           flex: 1,

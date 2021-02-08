@@ -18,6 +18,10 @@ const userSchema = new Schema({
     isVerified: {
       type: Boolean,
       default: false
+    },
+    isCM: {
+      type: Boolean,
+      default: false
     }
 });
 
@@ -27,6 +31,7 @@ userSchema.methods.toAuthJSON = function() {
     email: this.email,
     firstName: this.firstName,
     lastName: this.lastName,
+    address: this.address,
     token: this.generateJWT(),
   };
 };

@@ -51,29 +51,16 @@ class LocationAutocomplete extends React.Component {
 const styles = StyleSheet.create({
 
   MainContainer :{
-
   // Setting up View inside content in Vertically center.
   justifyContent: 'center',
   flex:1,
   margin: 10
-
   },
-
   TextInputStyleClass:{
-
-  // Setting up Hint Align center.
   textAlign: 'center',
-
-  // Setting up TextInput height as 50 pixel.
   height: 50,
-
-  // Set border width.
    borderWidth: 0,
-
-  // Set border Radius.
    borderRadius: 10 ,
-
-  //Set background color of Text Input.
    backgroundColor : "#FFFFFF",
    fontWeight: "bold",
 
