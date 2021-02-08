@@ -24,7 +24,8 @@ class Profile extends React.Component {
       lastName: '',
       token: '',
       address: {city: '', province: '', country: ''},
-      id: ''
+      id: '',
+      isCM: ''
     }
   }
   componentDidMount() {
@@ -45,6 +46,8 @@ class Profile extends React.Component {
             })
           })
         })
+      res.user.isCM.then((isCM)=> {
+        this.setState({isCM: isCM})})
     })
   }
   render () {
@@ -76,6 +79,7 @@ class Profile extends React.Component {
         <Text>{this.state.address.city}</Text>
         <Text>{this.state.address.province}</Text>
         <Text>{this.state.address.country}</Text>
+        <Text>CM: {this.state.isCM}</Text>
       </View>
         <View style={{
           flex: 1,

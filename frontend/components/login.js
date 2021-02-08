@@ -1,10 +1,11 @@
 import React from "react";
-import { View, TextInput, Alert, StyleSheet } from "react-native";
+import { View, TextInput, Alert, StyleSheet, Picker } from "react-native";
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import {login, signup} from "../services/auth/AuthService"
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import Home from "./Home"
 import LocationAutocomplete from '../components/LocationAutocomplete'
+import DropDownPicker from 'react-native-dropdown-picker';
 
 class Login extends React.Component {
   static navigationOptions = {
@@ -26,7 +27,8 @@ class Login extends React.Component {
         email: '',
         password: '',
         login: true,
-        address: {city: '', province: '', country: ''}
+        address: {city: '', province: '', country: ''},
+        isCM: 'no'
     }
   }
   getSwitchLabel(type){
@@ -62,11 +64,23 @@ class Login extends React.Component {
         Alert.alert(error)
       })
     } else{
-      signup(this.state.email, this.state.password, this.state.firstName, this.state.lastName, this.state.address)
+      var isCM = false
+      if (this.state.isCM === 'yes'){
+        isCM = true
+      }
+      signup(this.state.email, this.state.password, this.state.firstName, this.state.lastName, this.state.address, isCM)
       .then((res)=> {if (res){this.props.navigation.navigate("Home")}})
       .catch((error)=> {
         Alert.alert(error)
       })
+    }
+  }
+  selectPicker(){
+    if (this.state.isCM){
+      return "yes"
+    }
+    else{
+      return "no"
     }
   }
   render () {
@@ -84,7 +98,7 @@ class Login extends React.Component {
         </View>
         <View
           style={{
-            height: "40%",
+            height: "60%",
             alignItems: "center",
             flexDirection: "column",
             padding: "10%"
@@ -107,6 +121,20 @@ class Login extends React.Component {
               <TextInput style={styles.TextInputStyleClass}
               onChangeText={(firstName) => this.setState({firstName})}
               placeholder="First Name" />
+              <DropDownPicker
+                items={[
+                    {label: 'Yes', value: 'yes'},
+                    {label: 'No', value: 'no'},
+                ]}
+                containerStyle={{height: 40}}
+                style={{backgroundColor: '#FFFFFF'}}
+                itemStyle={{
+                    justifyContent: 'flex-start'
+                }}
+                dropDownStyle={{backgroundColor: '#FFFFFF'}}
+                placeholder="Are you a Certified Maintainer?"
+                onChangeItem={item => this.setState({isCM: item.value})}
+            />
 
               <TextInput style={styles.TextInputStyleClass}
               onChangeText={(lastName) => this.setState({lastName})}

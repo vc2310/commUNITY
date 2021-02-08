@@ -31,6 +31,11 @@ export const login = (email, password) => {
             AsyncStorage.setItem('province', data.user.address.province)
             AsyncStorage.setItem('country', data.user.address.country)
             AsyncStorage.setItem('id', data.user._id)
+            if (data.user.isCM){
+              AsyncStorage.setItem('isCM', '1')
+            }else{
+              AsyncStorage.setItem('isCM', '0')
+            }
           } catch(error){
             console.log(error)
           }
@@ -49,14 +54,15 @@ export const login = (email, password) => {
   })
 }
 
-export const signup = (email, password, firstname, lastname, address) => {
+export const signup = (email, password, firstname, lastname, address, isCM) => {
   return new Promise((resolve, reject) => {
     var user = {
       email: email,
       password: password,
       firstName: firstname,
       lastName: lastname,
-      address: address
+      address: address,
+      isCM: isCM
     }
     console.log(user)
     var body = JSON.stringify({user})
@@ -82,6 +88,11 @@ export const signup = (email, password, firstname, lastname, address) => {
             AsyncStorage.setItem('province', data.user.address.province)
             AsyncStorage.setItem('country', data.user.address.country)
             AsyncStorage.setItem('id', data.user._id)
+            if (data.user.isCM){
+              AsyncStorage.setItem('isCM', '1')
+            }else{
+              AsyncStorage.setItem('isCM', '0')
+            }
           } catch(error){
             console.log(error)
           }
@@ -112,6 +123,7 @@ export const logout = async() => {
       AsyncStorage.removeItem('province')
       AsyncStorage.removeItem('country')
       AsyncStorage.removeItem('id')
+      AsyncStorage.removeItem('isCM')
       resolve(true)
     } catch(error){
       reject(error)
@@ -132,7 +144,8 @@ export const getUser = async() => {
           province: AsyncStorage.getItem('province'),
           country: AsyncStorage.getItem('country')
         },
-        id: AsyncStorage.getItem('id')
+        id: AsyncStorage.getItem('id'),
+        isCM: AsyncStorage.getItem('isCM'),
       }})
     } catch(error){
       reject(error)

@@ -32,6 +32,7 @@ userSchema.methods.toAuthJSON = function() {
     firstName: this.firstName,
     lastName: this.lastName,
     address: this.address,
+    isCM: this.isCM,
     token: this.generateJWT(),
   };
 };
