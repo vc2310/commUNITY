@@ -42,7 +42,7 @@ class Search extends React.Component {
         this.setState({ userCity: city })
       })
     })
-    getIssues().then((response) => {
+    getIssues({}).then((response) => {
       var tempIssues = response.issues
       tempIssues.sort((a, b) => (a.upVotes.length > b.upVotes.length) ? -1 : (a.upVotes.length < b.upVotes.length) ? 1 : 0)
       this.setState({ issues: tempIssues })

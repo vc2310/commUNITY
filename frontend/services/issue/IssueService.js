@@ -121,9 +121,10 @@ export const changeStatus = (issueID, status) => {
   })
 }
 
-export const getIssues = () => {
+export const getIssues = (query) => {
   return new Promise((resolve, reject) => {
-    fetch('http://localhost:3000/v1/getIssues', {
+    var queryString = JSON.stringify({query: query})
+    fetch('http://localhost:3000/v1/getIssues/' + queryString, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
