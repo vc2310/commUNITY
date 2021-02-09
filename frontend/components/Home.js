@@ -81,6 +81,7 @@ class Home extends React.Component {
         styleURL={'mapbox://styles/faisalmuh786/ck84o8v2203891irqnlxkpdi3'}
         zoomLevel={1}
         style={{flex: 1}}
+        onLongPress={(event)=>{console.log('Coords:', event)}}
         onRegionDidChange={(event)=>{this.centerChanged(event)}}>
            <MapboxGL.Camera
               zoomLevel={12}

@@ -18,7 +18,22 @@ const issueSchema = new Schema({
     upVotes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users'
-    }]
+    }],
+    downVotes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users'
+    }],
+    status: {
+      type: String,
+      default: 'new'
+    },
+    comments: [
+                [
+                  {type: String},
+                  {type: mongoose.Schema.Types.ObjectId,ref: 'Users'},
+                  {type: Date}
+                ]
+              ]
 });
 
 issueSchema.methods.setDate = function() {
@@ -36,7 +51,10 @@ issueSchema.methods.toJSON = function() {
         images: this.images,
         createdBy: this.createdBy,
         created: this.created,
-        upVotes: this.upVotes
+        upVotes: this.upVotes,
+        downVotes: this.downVotes,
+        comments: this.comments,
+        status: this.status
       };
 };
 

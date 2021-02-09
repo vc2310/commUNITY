@@ -200,6 +200,31 @@ export const upVoteIssues = (req, res, next) => {
             console.log(error)
           });
       }
+      else if (issue.downVotes.includes(upvote.createdBy)){
+          Issue.updateOne({_id: upvote.issueID}, {$pull: {downVotes: upvote.createdBy}}).then((issue)=>{
+            Issue.findById(upvote.issueID).then((issue)=>{
+              return res.json({issue: issue})
+            }, (error)=>{
+              console.log(error)
+            });
+          }, (error)=>{
+            console.log(error)
+          });
+          Issue.updateOne({_id: upvote.issueID}, {$push: {upVotes: [upvote.createdBy]}}).then((issue)=>{
+            Issue.findById(upvote.issueID).then((issue)=>{
+              return res.json({issue: issue})
+            }, (error)=>{
+              console.log(error)
+            });
+          }, (error)=>{
+            console.log(error)
+                return res.status(400).json({
+                  errors: {
+                    message: 'Something went wrong.',
+                  },
+                });
+          });
+      }
       else{
         Issue.updateOne({_id: upvote.issueID}, {$push: {upVotes: [upvote.createdBy]}}).then((issue)=>{
           Issue.findById(upvote.issueID).then((issue)=>{
@@ -231,4 +256,168 @@ export const upVoteIssues = (req, res, next) => {
       },
     });
   })
+};
+
+export const downVoteIssue = (req, res, next) => {
+  const { body: { downvote } } = req;
+  console.log(downvote)
+  if(!downvote.createdBy || !downvote.issueID) {
+    return res.status(400).json({
+      errors: {
+        message: 'Missing fields.',
+      },
+    });
+  }
+
+  User.findById(downvote.createdBy).then((users)=>{
+
+    if (!users || users.length == 0){
+        return res.status(400).json({
+          errors: {
+            message: 'User not found',
+          },
+        });
+    }
+    Issue.findById(downvote.issueID).then((issue)=>{
+      if (issue.downVotes.includes(downvote.createdBy)){
+          Issue.updateOne({_id: downvote.issueID}, {$pull: {downVotes: downvote.createdBy}}).then((issue)=>{
+            Issue.findById(downvote.issueID).then((issue)=>{
+              return res.json({issue: issue})
+            }, (error)=>{
+              console.log(error)
+            });
+          }, (error)=>{
+            console.log(error)
+          });
+      }
+      else if (issue.upVotes.includes(downvote.createdBy)){
+          Issue.updateOne({_id: downvote.issueID}, {$pull: {upVotes: downvote.createdBy}}).then((issue)=>{
+            Issue.findById(downvote.issueID).then((issue)=>{
+              return res.json({issue: issue})
+            }, (error)=>{
+              console.log(error)
+            });
+          }, (error)=>{
+            console.log(error)
+          });
+          Issue.updateOne({_id: downvote.issueID}, {$push: {downVotes: [downvote.createdBy]}}).then((issue)=>{
+            Issue.findById(downvote.issueID).then((issue)=>{
+              return res.json({issue: issue})
+            }, (error)=>{
+              console.log(error)
+            });
+          }, (error)=>{
+            console.log(error)
+                return res.status(400).json({
+                  errors: {
+                    message: 'Something went wrong.',
+                  },
+                });
+            });
+      }
+      else{
+        Issue.updateOne({_id: downvote.issueID}, {$push: {downVotes: [downvote.createdBy]}}).then((issue)=>{
+          Issue.findById(downvote.issueID).then((issue)=>{
+            return res.json({issue: issue})
+          }, (error)=>{
+            console.log(error)
+          });
+        }, (error)=>{
+          console.log(error)
+              return res.status(400).json({
+                errors: {
+                  message: 'Something went wrong.',
+                },
+              });
+        });
+      }
+    }, (error)=>{
+        console.log(error)
+        return res.status(400).json({
+          errors: {
+            message: 'Something went wrong.',
+          },
+        });
+    });
+  }, (error)=>{
+    return res.status(400).json({
+      errors: {
+        message: 'User not found',
+      },
+    });
+  })
+};
+
+export const commentIssue = (req, res, next) => {
+  const { body: { comment } } = req;
+  console.log(comment)
+  if(!comment.text || !comment.createdBy || !comment.issueID) {
+    return res.status(400).json({
+      errors: {
+        message: 'Missing fields.',
+      },
+    });
+  }
+
+  User.findById(comment.createdBy).then((users)=>{
+
+    if (!users || users.length == 0){
+        return res.status(400).json({
+          errors: {
+            message: 'User not found',
+          },
+        });
+    }
+    Issue.findById(comment.issueID).then((issue)=>{
+      if (issue){
+        const today = new Date();
+        Issue.updateOne({_id: comment.issueID}, {$push: {comments: [comment.text, comment.createdBy, today]}}).then((issue)=>{
+          Issue.findById(comment.issueID).then((issue)=>{
+            return res.json({issue: issue})
+          }, (error)=>{
+            console.log(error)
+          });
+        }, (error)=>{
+          console.log(error)
+              return res.status(400).json({
+                errors: {
+                  message: 'Something went wrong.',
+                },
+              });
+        });
+      }
+    });
+  });
+};
+
+export const statusIssue = (req, res, next) => {
+  const { body: { issue } } = req;
+  console.log(issue)
+  if(!issue.status || !issue.issueID) {
+    return res.status(400).json({
+      errors: {
+        message: 'Missing fields.',
+      },
+    });
+  }
+
+    Issue.findById(issue.issueID).then((issueR)=>{
+      if (issueR){
+        console.log(issue.status)
+        Issue.updateOne({_id: issue.issueID}, {$set: {status: issue.status}}).then((issueR)=>{
+          Issue.findById(issue.issueID).then((issueR)=>{
+            return res.json({issue: issueR})
+          }, (error)=>{
+            console.log(error)
+          });
+        }, (error)=>{
+          console.log(error)
+              return res.status(400).json({
+                errors: {
+                  message: 'Something went wrong.',
+                },
+              });
+        });
+      }
+    })
 };
