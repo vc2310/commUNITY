@@ -30,7 +30,6 @@ class CreateIssuePage extends React.Component {
     getUser().then((res)=> {
       res.user.id.then((id)=> {
         this.setState({issue: {...this.state.issue, createdBy: id}})})
-
     })
   }
 

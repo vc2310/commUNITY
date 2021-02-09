@@ -46,6 +46,81 @@ export const upVoteIssue = (createdBy, issueID) => {
   })
 }
 
+export const downVoteIssue = (createdBy, issueID) => {
+  var downvote = {createdBy: createdBy, issueID: issueID}
+  return new Promise((resolve, reject) => {
+    var body = JSON.stringify({downvote})
+    fetch('http://localhost:3000/v1/downVoteIssue', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    }).then((response) => {
+      console.log(response)
+        if (response.status === 200){
+          response.json().then((data)=>{
+            resolve(data)
+          })
+        }
+    }).catch((error) => {
+        console.error(error);
+    });
+
+  })
+}
+
+export const commentIssue = (createdBy, issueID, text) => {
+  var comment = {createdBy: createdBy, issueID: issueID, text: text}
+  return new Promise((resolve, reject) => {
+    var body = JSON.stringify({comment})
+    fetch('http://localhost:3000/v1/commentIssue', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    }).then((response) => {
+      console.log(response)
+        if (response.status === 200){
+          response.json().then((data)=>{
+            resolve(data)
+          })
+        }
+    }).catch((error) => {
+        console.error(error);
+    });
+
+  })
+}
+
+export const changeStatus = (issueID, status) => {
+  var issue = {issueID: issueID, status: status}
+  return new Promise((resolve, reject) => {
+    var body = JSON.stringify({issue})
+    fetch('http://localhost:3000/v1/statusIssue', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    }).then((response) => {
+      console.log(response)
+        if (response.status === 200){
+          response.json().then((data)=>{
+            resolve(data)
+          })
+        }
+    }).catch((error) => {
+        console.error(error);
+    });
+
+  })
+}
+
 export const getIssues = () => {
   return new Promise((resolve, reject) => {
     fetch('http://localhost:3000/v1/getIssues', {
