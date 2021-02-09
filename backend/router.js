@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 // Import index action from users controller
 import { login, signup } from './controllers/users';
-import { createIssue, getIssues, upVoteIssues, createIssueWithImage, getImage, getIssue } from './controllers/issues';
+import { createIssue, getIssues, upVoteIssues, downVoteIssue, createIssueWithImage, getImage, getIssue, commentIssue, statusIssue } from './controllers/issues';
 
 // Initialize the router
 const router = Router();
@@ -18,6 +18,12 @@ router.route('/getIssues').get(getIssues);
 router.route('/getIssue/:id').get(getIssue);
 
 router.route('/upVoteIssue').post(upVoteIssues);
+
+router.route('/downVoteIssue').post(downVoteIssue);
+
+router.route('/commentIssue').post(commentIssue);
+
+router.route('/statusIssue').post(statusIssue);
 
 router.route('/createIssueWithImage').post(createIssueWithImage);
 
