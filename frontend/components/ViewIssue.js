@@ -48,6 +48,7 @@ class ViewIssue extends React.Component {
       res.user.isCM.then((isCM)=> {
         this.setState({isCM: isCM})
       })
+
     })
     this.getIssues()
   }
@@ -105,7 +106,7 @@ class ViewIssue extends React.Component {
             return <View style={{backgroundColor: '#1c2636', borderWidth: 0.5}}><Text>{comment[0]}</Text></View>
           })}
         </ScrollView>
-        {this.state.isCM === '1' &&
+        {this.state.isCM === '1' && this.state.userCity === this.state.issue.address.city &&
           <View>
             <View style={{flexDirection: 'row'}}>
               <TextInput stye={styles.textArea}
