@@ -145,27 +145,29 @@ class Search extends React.Component {
                     {item.address.city === this.state.homeAddress.city
                       &&
                       <View>
-                        <IconButton
-                          icon={{ uri: 'https://simpleicon.com/wp-content/uploads/like.png' }}
-                          color={this.iconColor(item, 1)}
-                          size={20}
-                          onPress={(e) => { this.upvote(item.id) }}
-                        />
-                        <IconButton
-                          icon={{ uri: 'https://simpleicon.com/wp-content/uploads/unlike.png' }}
-                          color={this.iconColor(item, 0)}
-                          size={20}
-                          onPress={(e) => { this.downvote(item.id) }}
-                        />
+                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                          <IconButton
+                            icon={{ uri: 'https://simpleicon.com/wp-content/uploads/like.png' }}
+                            color={this.iconColor(item, 1)}
+                            size={20}
+                            onPress={(e) => { this.upvote(item.id) }}
+                          />
+                          <Text>
+                            {item.upVotes.length}
+                          </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                          <IconButton
+                            icon={{ uri: 'https://simpleicon.com/wp-content/uploads/unlike.png' }}
+                            color={this.iconColor(item, 0)}
+                            size={20}
+                            onPress={(e) => { this.downvote(item.id) }}
+                          />
+                          <Text>
+                            {item.downVotes.length}
+                          </Text>
+                        </View>
                       </View>}
-                  </View>
-                  <View style={{ flexDirection: 'column' }}>
-                    <Text>
-                      {item.upVotes.length}
-                    </Text>
-                    <Text>
-                      {item.downVotes.length}
-                    </Text>
                   </View>
                 </View>
               </View>
