@@ -114,6 +114,32 @@ class CreateIssuePage extends React.Component {
        });
     };
 
+    const showCamera = (): void => {
+      launchCamera({
+          storageOptions: {
+            skipBackup: true,
+            path: 'images',
+          },
+        }, (response) => {
+        console.log('Response = ', response);
+
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.log('User tapped custom button: ', response.customButton);
+          alert(response.customButton);
+        } else {
+          const source = { uri: response.uri };
+          console.log('response', JSON.stringify(response));
+          var temp = this.state.issue.images
+          temp.push(response)
+          this.setState({issue: {...this.state.issue, images: temp}});
+        }
+      })
+    }
+
     return (
       <ScrollView>
         <View style={styles.inputContainer}>
@@ -141,6 +167,11 @@ class CreateIssuePage extends React.Component {
               showImagePicker()
             }} style={{backgroundColor: 'grey', width: 100, height: 100, justifyContent: "center"}}>
               <Text>Load Photo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={(e)=>{
+              showCamera()
+            }} style={{backgroundColor: 'grey', width: 100, height: 100, justifyContent: "center"}}>
+              <Text>Take Photo</Text>
             </TouchableOpacity>
           {this.state.issue.images.map((img, index) => {
             return <Image source={{uri: img.uri }} key={index} style={{width: 100, height: 100}}/>;
