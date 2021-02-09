@@ -92,6 +92,7 @@ class Home extends React.Component {
           	>
           </MapboxGL.Camera>
           {this.renderAnnotations()}
+          <MapboxGL.UserLocation ref={(location) => {console.log({location})}} />
       </MapboxGL.MapView>
       <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "20%", marginLeft: "12.5%"}}>
         <LocationAutocomplete onSelect={(item) => {this.setState({ center: item.center})}}/>
