@@ -38,7 +38,7 @@ class Home extends React.Component {
 
   centerChanged(event){
     console.log('getting issues', event)
-    var query = {"near": {"center": event.geometry.coordinates, "radius": 3}}
+    var query = {"near": {"center": event.geometry.coordinates, "radius": 8}}
     getIssues(query).then((response)=>{
       this.setState({issues: response.issues})
     }).catch((err)=>{
