@@ -39,7 +39,6 @@ class CreateIssuePage extends React.Component {
       res.user.address.city.then((city)=> {
         res.user.address.province.then((province)=> {
           res.user.address.country.then((country)=> {
-            console.log(city, province, country)
               this.setState({homeAddress: {city: city, province: province, country: country}})
             })
           })
@@ -48,15 +47,12 @@ class CreateIssuePage extends React.Component {
   }
 
   submit(){
-    console.log(this.state)
     let formdata = new FormData();
     this.state.issue.images.map((img, index) => {
       formdata.append("multiple_images", {uri: img.uri, name: img.fileName, type: img.type})
     })
     formdata.append("issue", JSON.stringify(this.state.issue))
-    console.log(formdata)
     createIssue(formdata).then((res)=>{
-      console.log(res)
       if (res){
         this.props.close()
       }
@@ -64,7 +60,6 @@ class CreateIssuePage extends React.Component {
   }
 
   submitDisabled(){
-    console.log(this.state.issue.address, this.state.homeAddress)
     if (this.state.issue.address.city !== this.state.homeAddress.city ||
         this.state.issue.address.province !== this.state.homeAddress.province ||
         this.state.issue.address.country !== this.state.homeAddress.country){

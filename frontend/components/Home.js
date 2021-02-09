@@ -81,13 +81,13 @@ class Home extends React.Component {
  }
 
  userLocation(location){
-   this.setState({currentCoor: [location.coords.longitude, location.coords.latitude]})
-     console.log(this.state.currentCoor)
+   if (location){
+     this.setState({currentCoor: [location.coords.longitude, location.coords.latitude]})
+   }
  }
 
  focusUser(){
    this.setState({center: this.state.currentCoor})
-   console.log(this.state.center, this.state.currentCoor)
  }
 
   render () {
