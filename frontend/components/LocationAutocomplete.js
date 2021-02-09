@@ -7,8 +7,9 @@ import { Container, Header, Content, Button, Text, H1 } from "native-base";
 class LocationAutocomplete extends React.Component {
   constructor(props){
     super(props);
+    console.log(this.props.text)
     this.state = {
-      query: '',
+      query: this.props.text,
       data: []
     }
   }

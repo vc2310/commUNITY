@@ -25,7 +25,16 @@ class Search extends React.Component {
       issues: [],
       center: [],
       userID: '',
-      userCity: ''
+      address:{
+        city: '',
+        province: '',
+        country: ''
+      },
+      homeAddress:{
+        city: '',
+        province: '',
+        country: ''
+      },
     }
   }
   componentDidMount() {
@@ -38,21 +47,34 @@ class Search extends React.Component {
       res.user.id.then((id) => {
         this.setState({ userID: id })
       })
-      res.user.address.city.then((city) => {
-        this.setState({ userCity: city })
-      })
+      res.user.address.city.then((city)=> {
+        res.user.address.province.then((province)=> {
+          res.user.address.country.then((country)=> {
+              this.setState({homeAddress: {city: city, province: province, country: country}}, ()=>{
+                this.getIssues();
+              })
+            })
+          })
+        })
     })
-    getIssues({}).then((response) => {
+  }
+  getIssues(){
+    var query = {}
+    if (this.state.address.city !== '' && this.state.address.province !== '' && this.state.address.country !== ''){
+      query.address = this.state.address
+    }else{
+      query.address = this.state.homeAddress
+    }
+    console.log(query, this.state.address)
+    getIssues(query).then((response) => {
       var tempIssues = response.issues
       tempIssues.sort((a, b) => (a.upVotes.length > b.upVotes.length) ? -1 : (a.upVotes.length < b.upVotes.length) ? 1 : 0)
       this.setState({ issues: tempIssues })
     }).catch((err) => {
       console.log(err)
     })
-    var issues = this.state.issues
-    issues.sort((a, b) => (a.upVotes.length > b.upVotes.length) ? -1 : (a.upVotes.length < b.upVotes.length) ? 1 : 0)
-
   }
+
   upvote(issueID) {
     upVoteIssue(this.state.userID, issueID).then((response) => {
       var issues = this.state.issues
@@ -104,7 +126,8 @@ class Search extends React.Component {
   render() {
     return (
       <View style={{ backgroundColor: '#1c2636' }}>
-        <ScrollView style={{ marginTop: '25%' }}>
+        {this.state.issues.length === 0 && <View style={{ backgroundColor: '#FFFFFF', marginTop: '25%'  }}><H1>No Issues Found.</H1></View>}
+        {this.state.issues.length !== 0 && <ScrollView style={{ marginTop: '25%' }}>
           {
             this.state.issues.map((item, index) => (
               <View key={item.id} style={styles.item}>
@@ -119,7 +142,7 @@ class Search extends React.Component {
                 </View>
                 <View style={{ flexDirection: 'row' }}>
                   <View style={{ flexDirection: 'column' }}>
-                    {item.address.city === this.state.userCity
+                    {item.address.city === this.state.homeAddress.city
                       &&
                       <View>
                         <IconButton
@@ -148,9 +171,28 @@ class Search extends React.Component {
               </View>
             ))
           }
-        </ScrollView>
+        </ScrollView>}
         <View style={{ position: 'absolute', justifyContent: "center", width: "75%", marginTop: "10%", marginLeft: "12.5%" }}>
-          <LocationAutocomplete onSelect={(item) => { this.setState({ center: item.center }) }} />
+          <LocationAutocomplete text={this.state.address.city} onSelect={(selected) => {
+            var city = ''
+            var province = ''
+            var country = ''
+            selected.context.map((item, index)=>{
+              if (item.id.includes('place')){
+                city = item.text
+              }
+              else if (item.id.includes('region')){
+                province = item.text
+              }
+              else if (item.id.includes('country')){
+                country = item.text
+              }
+
+            })
+            this.setState({address: {city: city, province: province, country: country}}, ()=>{
+              this.getIssues()
+            })
+          }} />
         </View>
       </View>
     );

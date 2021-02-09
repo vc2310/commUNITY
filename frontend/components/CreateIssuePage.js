@@ -23,6 +23,11 @@ class CreateIssuePage extends React.Component {
         images: [],
         createdBy: '',
       },
+      homeAddress:{
+        city: '',
+        province: '',
+        country: ''
+      },
     }
 
   }
@@ -30,6 +35,15 @@ class CreateIssuePage extends React.Component {
     getUser().then((res)=> {
       res.user.id.then((id)=> {
         this.setState({issue: {...this.state.issue, createdBy: id}})})
+
+      res.user.address.city.then((city)=> {
+        res.user.address.province.then((province)=> {
+          res.user.address.country.then((country)=> {
+            console.log(city, province, country)
+              this.setState({homeAddress: {city: city, province: province, country: country}})
+            })
+          })
+        })
     })
   }
 
@@ -50,6 +64,12 @@ class CreateIssuePage extends React.Component {
   }
 
   submitDisabled(){
+    console.log(this.state.issue.address, this.state.homeAddress)
+    if (this.state.issue.address.city !== this.state.homeAddress.city ||
+        this.state.issue.address.province !== this.state.homeAddress.province ||
+        this.state.issue.address.country !== this.state.homeAddress.country){
+      return true
+    }
     if (this.state.issue.title !== '' && this.state.issue.description !== ''
         && this.state.issue.geometry.length !== 0 && this.state.issue.images.length !== 0){
       return false
