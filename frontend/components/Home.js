@@ -103,7 +103,7 @@ class Home extends React.Component {
               zoomLevel={12}
               centerCoordinate={this.state.center}
               animationMode={'flyTo'}
-              animationDuration={10}
+              animationDuration={2000}
           	>
           </MapboxGL.Camera>
           {this.renderAnnotations()}
