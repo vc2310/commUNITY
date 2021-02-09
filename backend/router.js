@@ -13,7 +13,7 @@ router.route('/signup').post(signup);
 
 router.route('/createIssue').post(createIssueWithImage);
 
-router.route('/getIssues').get(getIssues);
+router.route('/getIssues/:query').get(getIssues);
 
 router.route('/getIssue/:id').get(getIssue);
 

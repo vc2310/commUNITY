@@ -137,16 +137,19 @@ export const createIssue = (req, res, next) => {
 };
 
 export const getIssues = (req, res, next) => {
-  const { body: { query } } = req;
+  var query = JSON.parse(req.params.query)
+  query = query.query
+  console.log(query)
   var finalQuery = {}
   if (query.createdBy){
     finalQuery["createdBy"] = query.createdBy
   }
-  if (query.within){
+  if (query.near){
     finalQuery["geometry"] = { $geoWithin:
-       { $centerSphere: [ query.within.center, query.within.radius ] }
+       { $centerSphere: [ query.near.center, query.near.radius/ 3963.2 ] }
      }
   }
+  console.log(finalQuery)
   return Issue.find(finalQuery)
     .then((issues) => {
       var json = issues.filter(issues => issues.toJSON());
