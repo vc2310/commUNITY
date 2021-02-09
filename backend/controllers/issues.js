@@ -137,9 +137,17 @@ export const createIssue = (req, res, next) => {
 };
 
 export const getIssues = (req, res, next) => {
-  const { body: { issue } } = req;
-
-  return Issue.find()
+  const { body: { query } } = req;
+  var finalQuery = {}
+  if (query.createdBy){
+    finalQuery["createdBy"] = query.createdBy
+  }
+  if (query.within){
+    finalQuery["geometry"] = { $geoWithin:
+       { $centerSphere: [ query.within.center, query.within.radius ] }
+     }
+  }
+  return Issue.find(finalQuery)
     .then((issues) => {
       var json = issues.filter(issues => issues.toJSON());
       res.json({issues: json})
