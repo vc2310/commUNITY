@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { View, TextInput, Alert, StyleSheet, PermissionsAndroid, TouchableOpacity, ScrollView, Image, Platform } from "react-native";
+
 import { searchLocationAutoComplete } from "../services/mapbox/MapboxService"
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import LocationAutocomplete from '../components/LocationAutocomplete'
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { getUser, logout } from "../services/auth/AuthService"
 import { createIssue } from "../services/issue/IssueService"
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 class CreateIssuePage extends React.Component {
 
   constructor(props){
+
     super(props);
     this.state = {
       issue: {
@@ -24,7 +27,7 @@ class CreateIssuePage extends React.Component {
         images: [],
         createdBy: '',
       },
-      homeAddress:{
+      homeAddress: {
         city: '',
         province: '',
         country: ''
@@ -34,27 +37,30 @@ class CreateIssuePage extends React.Component {
 
   }
   componentDidMount() {
-    getUser().then((res)=> {
-      res.user.id.then((id)=> {
-        this.setState({issue: {...this.state.issue, createdBy: id}})})
+    getUser().then((res) => {
+      res.user.id.then((id) => {
+        this.setState({ issue: { ...this.state.issue, createdBy: id } })
+      })
 
-      res.user.address.city.then((city)=> {
-        res.user.address.province.then((province)=> {
-          res.user.address.country.then((country)=> {
-              this.setState({homeAddress: {city: city, province: province, country: country}})
-            })
+      res.user.address.city.then((city) => {
+        res.user.address.province.then((province) => {
+          res.user.address.country.then((country) => {
+            this.setState({ homeAddress: { city: city, province: province, country: country } })
           })
         })
+      })
     })
   }
 
   submit(){
     this.setState({isLoading: true})
+
     let formdata = new FormData();
     this.state.issue.images.map((img, index) => {
-      formdata.append("multiple_images", {uri: img.uri, name: img.fileName, type: img.type})
+      formdata.append("multiple_images", { uri: img.uri, name: img.fileName, type: img.type })
     })
     formdata.append("issue", JSON.stringify(this.state.issue))
+
     createIssue(formdata).then((res)=>{
       if (res){
         this.setState({isLoading: false})
@@ -71,19 +77,24 @@ class CreateIssuePage extends React.Component {
     if (this.state.isLoading){
       return true
     }
+
     if (this.state.issue.address.city !== this.state.homeAddress.city ||
-        this.state.issue.address.province !== this.state.homeAddress.province ||
-        this.state.issue.address.country !== this.state.homeAddress.country){
+      this.state.issue.address.province !== this.state.homeAddress.province ||
+      this.state.issue.address.country !== this.state.homeAddress.country) {
       return true
     }
     if (this.state.issue.title !== '' && this.state.issue.description !== ''
-        && this.state.issue.geometry.length !== 0 && this.state.issue.images.length !== 0){
+      && this.state.issue.geometry.length !== 0 && this.state.issue.images.length !== 0) {
       return false
     }
     return true
   }
 
-  render () {
+  deleteImage(index) {
+    this.setState({ images: this.state.issue.images.splice(index, 1) });
+  }
+
+  render() {
     const options = {
      title: 'Load Photo',
      customButtons: [
@@ -191,6 +202,7 @@ class CreateIssuePage extends React.Component {
     }
 
     return (
+
       <ScrollView style={{paddingTop: 35}}>
         <View >
           <H1 style={{color: "white"}}>Report Issue</H1>
@@ -205,27 +217,70 @@ class CreateIssuePage extends React.Component {
               numberOfLines={8} multiline={true}
               onChangeText={(description) => this.setState({issue: {...this.state.issue, description: description}})}
               placeholder="Description" placeholderTextColor= "#bbb" textAlignVertical="top"/>
+            </View>
+          </View>
+          <View style={{
+            width: '100%',
+          }}>
+            <ScrollView
+              horizontal={true}
+            >
+              <TouchableOpacity onPress={(e) => {
+                showImagePicker()
+              }} style={{ backgroundColor: 'grey', width: 100, height: 100, justifyContent: "center" }}>
+                <Text>Load Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={(e) => {
+                showCamera()
+              }} style={{ backgroundColor: 'grey', width: 100, height: 100, justifyContent: "center" }}>
+                <Text>Take Photo</Text>
+              </TouchableOpacity>
+              {this.state.issue.images.map((img, index) => {
+                return (<ImageBackground
+                  source={{ uri: img.uri }}
+                  key={index}
+                  style={{ width: 100, height: 100 }}
+                >
+                  <TouchableOpacity onPress={() => {
+                    this.deleteImage(index);
+                  }}>
+                    <View style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      margin: 1,
+                      padding: 1
+                    }}>
+                      <FontAwesome name="times-circle" size={30} color="#0275d8" />
+                    </View>
+                  </TouchableOpacity>
+                </ImageBackground>)
+              })}
+            </ScrollView>
           </View>
           <View>
             <LocationAutocomplete onSelect={(selected) => {
               var city = ''
               var province = ''
               var country = ''
-              selected.context.map((item, index)=>{
-                if (item.id.includes('place')){
+              selected.context.map((item, index) => {
+                if (item.id.includes('place')) {
                   city = item.text
                 }
-                else if (item.id.includes('region')){
+                else if (item.id.includes('region')) {
                   province = item.text
                 }
-                else if (item.id.includes('country')){
+                else if (item.id.includes('country')) {
                   country = item.text
                 }
 
               })
-              this.setState({ issue:{... this.state.issue,
-                address: {city: city, province: province, country: country},
-                geometry: selected.center}})
+              this.setState({
+                issue: {
+                  ... this.state.issue,
+                  address: { city: city, province: province, country: country },
+                  geometry: selected.center
+                }
+              })
               this.setState({})
             }}/>
             </View>
@@ -280,12 +335,12 @@ class CreateIssuePage extends React.Component {
 }
 const styles = StyleSheet.create({
 
-  MainContainer :{
+  MainContainer: {
 
-  // Setting up View inside content in Vertically center.
-  justifyContent: 'center',
-  flex:1,
-  margin: 10
+    // Setting up View inside content in Vertically center.
+    justifyContent: 'center',
+    flex: 1,
+    margin: 10
 
   },
  inputContainer: {
@@ -301,6 +356,7 @@ const styles = StyleSheet.create({
    borderBottomWidth: 1,
    color: "#ffffff", //Expecting this to change input text color
  },
+
   textAreaContainer: {
     marginTop: 10,
     backgroundColor: "white",

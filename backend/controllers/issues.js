@@ -233,26 +233,25 @@ export const upVoteIssues = (req, res, next) => {
       else if (issue.downVotes.includes(upvote.createdBy)){
           Issue.updateOne({_id: upvote.issueID}, {$pull: {downVotes: upvote.createdBy}}).then((issue)=>{
             Issue.findById(upvote.issueID).then((issue)=>{
-              return res.json({issue: issue})
-            }, (error)=>{
-              console.log(error)
-            });
-          }, (error)=>{
-            console.log(error)
-          });
-          Issue.updateOne({_id: upvote.issueID}, {$push: {upVotes: [upvote.createdBy]}}).then((issue)=>{
-            Issue.findById(upvote.issueID).then((issue)=>{
-              return res.json({issue: issue})
-            }, (error)=>{
-              console.log(error)
-            });
-          }, (error)=>{
-            console.log(error)
-                return res.status(400).json({
-                  errors: {
-                    message: 'Something went wrong.',
-                  },
+              Issue.updateOne({_id: upvote.issueID}, {$push: {upVotes: [upvote.createdBy]}}).then((issue)=>{
+                Issue.findById(upvote.issueID).then((issue)=>{
+                  return res.json({issue: issue})
+                }, (error)=>{
+                  console.log(error)
                 });
+              }, (error)=>{
+                console.log(error)
+                    return res.status(400).json({
+                      errors: {
+                        message: 'Something went wrong.',
+                      },
+                    });
+              });
+            }, (error)=>{
+              console.log(error)
+            });
+          }, (error)=>{
+            console.log(error)
           });
       }
       else{
@@ -323,27 +322,26 @@ export const downVoteIssue = (req, res, next) => {
       else if (issue.upVotes.includes(downvote.createdBy)){
           Issue.updateOne({_id: downvote.issueID}, {$pull: {upVotes: downvote.createdBy}}).then((issue)=>{
             Issue.findById(downvote.issueID).then((issue)=>{
-              return res.json({issue: issue})
+              Issue.updateOne({_id: downvote.issueID}, {$push: {downVotes: [downvote.createdBy]}}).then((issue)=>{
+                Issue.findById(downvote.issueID).then((issue)=>{
+                  return res.json({issue: issue})
+                }, (error)=>{
+                  console.log(error)
+                });
+              }, (error)=>{
+                console.log(error)
+                    return res.status(400).json({
+                      errors: {
+                        message: 'Something went wrong.',
+                      },
+                    });
+                });
             }, (error)=>{
               console.log(error)
             });
           }, (error)=>{
             console.log(error)
           });
-          Issue.updateOne({_id: downvote.issueID}, {$push: {downVotes: [downvote.createdBy]}}).then((issue)=>{
-            Issue.findById(downvote.issueID).then((issue)=>{
-              return res.json({issue: issue})
-            }, (error)=>{
-              console.log(error)
-            });
-          }, (error)=>{
-            console.log(error)
-                return res.status(400).json({
-                  errors: {
-                    message: 'Something went wrong.',
-                  },
-                });
-            });
       }
       else{
         Issue.updateOne({_id: downvote.issueID}, {$push: {downVotes: [downvote.createdBy]}}).then((issue)=>{

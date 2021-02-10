@@ -1,92 +1,119 @@
 import React from "react";
-import { ScrollView, View, TextInput, Alert, StyleSheet, Picker } from "react-native";
+import {
+  ScrollView,
+  View,
+  TextInput,
+  Alert,
+  StyleSheet,
+  Picker,
+} from "react-native";
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
-import { login, signup } from "../services/auth/AuthService"
-import { createStackNavigator, createAppContainer } from 'react-navigation';
-import Home from "./Home"
-import LocationAutocomplete from './LocationAutocomplete'
-import DropDownPicker from 'react-native-dropdown-picker';
+import { login, signup } from "../services/auth/AuthService";
+import { createStackNavigator, createAppContainer } from "react-navigation";
+import Home from "./Home";
+import LocationAutocomplete from "./LocationAutocomplete";
+import DropDownPicker from "react-native-dropdown-picker";
 
 class Login extends React.Component {
   static navigationOptions = {
-    title: 'Login',
+    title: "Login",
     headerStyle: {
-      backgroundColor: '#03A9F4',
+      backgroundColor: "#03A9F4",
     },
-    headerTintColor: '#fff',
+    headerTintColor: "#fff",
     headerTitleStyle: {
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
-
   };
   constructor(props) {
     super(props);
     this.state = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
       login: true,
-      address: { city: '', province: '', country: '' },
-      isCM: 'no'
-    }
+      address: { city: "", province: "", country: "" },
+      isCM: "no",
+    };
   }
   getSwitchLabel(type) {
-    if (type == 'main') {
+    if (type == "main") {
       if (!this.state.login) {
-        return 'Sign Up'
+        return "Sign Up";
       }
-      return 'Login'
+      return "Login";
     }
     if (this.state.login) {
-      return 'Sign Up'
+      return "Sign Up";
     }
-    return 'Login'
+    return "Login";
   }
 
   submitDisabled() {
-    if (this.state.login && this.state.email !== '' && this.state.password !== '') {
-      return false
+    if (
+      this.state.login &&
+      this.state.email !== "" &&
+      this.state.password !== ""
+    ) {
+      return false;
+    } else if (
+      !this.state.login &&
+      this.state.email !== "" &&
+      this.state.password !== "" &&
+      this.state.firstName !== "" &&
+      this.state.lastName !== "" &&
+      this.state.address.city !== "" &&
+      this.state.address.province !== "" &&
+      this.state.address.country !== ""
+    ) {
+      return false;
     }
-    else if (!this.state.login && this.state.email !== ''
-      && this.state.password !== '' && this.state.firstName !== ''
-      && this.state.lastName !== '' && this.state.address.city !== ''
-      && this.state.address.province !== '' && this.state.address.country !== '') {
-      return false
-
-    }
-    return true
+    return true;
   }
 
   submit() {
     if (this.state.login) {
       login(this.state.email, this.state.password)
-        .then((res) => { if (res) { this.props.navigation.navigate("Home") } })
-        .catch((error) => {
-          Alert.alert(error)
+        .then((res) => {
+          if (res) {
+            this.props.navigation.navigate("Home");
+          }
         })
+        .catch((error) => {
+          Alert.alert(error);
+        });
     } else {
-      var isCM = false
-      if (this.state.isCM === 'yes') {
-        isCM = true
+      var isCM = false;
+      if (this.state.isCM === "yes") {
+        isCM = true;
       }
-      signup(this.state.email, this.state.password, this.state.firstName, this.state.lastName, this.state.address, isCM)
-        .then((res) => { if (res) { this.props.navigation.navigate("Home") } })
-        .catch((error) => {
-          Alert.alert(error)
+      signup(
+        this.state.email,
+        this.state.password,
+        this.state.firstName,
+        this.state.lastName,
+        this.state.address,
+        isCM
+      )
+        .then((res) => {
+          if (res) {
+            this.props.navigation.navigate("Home");
+          }
         })
+        .catch((error) => {
+          Alert.alert(error);
+        });
     }
   }
   selectPicker() {
     if (this.state.isCM) {
-      return "yes"
-    }
-    else {
-      return "no"
+      return "yes";
+    } else {
+      return "no";
     }
   }
   render() {
-
     return (
       <Container style={{ backgroundColor: "#1c2636" }}>
         <View
@@ -104,17 +131,19 @@ class Login extends React.Component {
             height: "60%",
             alignItems: "center",
             flexDirection: "column",
-            padding: "10%"
+            padding: "10%",
           }}
         >
-
-          <View style={{ width: '90%' }}>
-            <TextInput style={styles.TextInputStyleClass}
+          <View style={{ width: "90%" }}>
+            <TextInput
+              style={styles.TextInputStyleClass}
               onChangeText={(email) => this.setState({ email })}
-              placeholder="Email" />
+              placeholder="Email"
+            />
           </View>
-          <View style={{ width: '90%' }}>
-            <TextInput style={styles.TextInputStyleClass}
+          <View style={{ width: "90%" }}>
+            <TextInput
+              style={styles.TextInputStyleClass}
               secureTextEntry={true}
               onChangeText={(password) => this.setState({ password })}
               placeholder="Password"
@@ -126,22 +155,24 @@ class Login extends React.Component {
 
               <TextInput style={styles.TextInputStyleClass}
                 onChangeText={(firstName) => this.setState({ firstName })}
-                placeholder="First Name" />
+                placeholder="First Name"
+              />
               <DropDownPicker
                 items={[
-                  { label: 'Yes', value: 'yes' },
-                  { label: 'No', value: 'no' },
+                  { label: "Yes", value: "yes" },
+                  { label: "No", value: "no" },
                 ]}
                 containerStyle={{ height: 40 }}
-                style={{ backgroundColor: '#FFFFFF' }}
+                style={{ backgroundColor: "#FFFFFF" }}
                 itemStyle={{
-                  justifyContent: 'flex-start'
+                  justifyContent: "flex-start",
                 }}
-                dropDownStyle={{ backgroundColor: '#FFFFFF' }}
+                dropDownStyle={{ backgroundColor: "#FFFFFF" }}
                 placeholder="Are you a Certified Maintainer?"
-                onChangeItem={item => this.setState({ isCM: item.value })}
+                onChangeItem={(item) => this.setState({ isCM: item.value })}
               />
-              <TextInput style={styles.TextInputStyleClass}
+              <TextInput
+                style={styles.TextInputStyleClass}
                 onChangeText={(lastName) => this.setState({ lastName })}
                 placeholder="Last Name" />
 
@@ -166,7 +197,7 @@ class Login extends React.Component {
                 this.setState({ address: { city: city, province: province, country: country } })
               }} />
             </ScrollView>
-          }
+          )}
         </View>
         <View
           style={{
@@ -178,13 +209,32 @@ class Login extends React.Component {
         >
 
           <View>
-            <Button disabled={this.submitDisabled()} onPress={() => { this.submit() }}>
-              <Text>{this.getSwitchLabel('main')}</Text>
+            <Button
+              style={{
+                padding: "10%",
+                alignSelf: "center",
+                marginBottom: "2%",
+              }}
+              disabled={this.submitDisabled()}
+              onPress={() => {
+                this.submit();
+              }}
+            >
+              <Text>{this.getSwitchLabel("main")}</Text>
             </Button>
           </View>
           <View>
-            <Button danger onPress={() => { this.setState({ login: !this.state.login }) }}>
-              <Text>{this.getSwitchLabel('switch')}</Text>
+            <Button
+              danger
+              style={{
+                padding: "10%",
+                alignSelf: "center",
+              }}
+              onPress={() => {
+                this.setState({ login: !this.state.login });
+              }}
+            >
+              <Text>{this.getSwitchLabel("switch")}</Text>
             </Button>
           </View>
         </View>
@@ -194,34 +244,32 @@ class Login extends React.Component {
 }
 
 const styles = StyleSheet.create({
-
   MainContainer: {
     // Setting up View inside content in Vertically center.
-    justifyContent: 'center',
+    justifyContent: "center",
     flex: 1,
-    margin: 10
+    margin: 10,
   },
   TextInputStyleClass: {
-    textAlign: 'center',
+    textAlign: "center",
     height: 50,
     borderWidth: 0,
     borderRadius: 10,
     backgroundColor: "#FFFFFF",
     fontWeight: "bold",
-
   },
   inputContainer: {
-    paddingTop: '25%'
+    paddingTop: "25%",
   },
   textInput: {
-    borderColor: '#CCCCCC',
+    borderColor: "#CCCCCC",
     borderTopWidth: 1,
     borderBottomWidth: 1,
     height: 50,
     fontSize: 25,
     paddingLeft: 20,
-    paddingRight: 20
-  }
+    paddingRight: 20,
+  },
 });
 
 export default Login;
