@@ -5,7 +5,8 @@ import { Container, Header, Content, Button, Text, H1, H2, H3 } from "native-bas
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { getUser, logout } from "../services/auth/AuthService"
 import { getIssues, getIssue } from "../services/issue/IssueService";
-import { Avatar } from 'react-native-elements';
+import { Avatar, Accessory } from 'react-native-elements';
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 
 class Profile extends React.Component {
@@ -109,13 +110,16 @@ class Profile extends React.Component {
         <View style={{
           justifyContent: "center",
           alignItems: "center",
+          marginBottom: "5%"
         }}>
           <Avatar
             placeholderStyle={{ backgroundColor: '#efd7d7' }}
             size="xlarge"
             rounded
-            title={this.state.firstName.charAt(0).toUpperCase() + this.state.lastName.charAt(0).toUpperCase()}
-          />
+            showAccessory
+            title={this.state.firstName.charAt(0).toUpperCase() + this.state.lastName.charAt(0).toUpperCase()}>
+          </Avatar>
+          {this.state.isCM == 1 ? <FontAwesome name="check-circle" size={30} style={{ color: '#1DA1F2' }} /> : <H1></H1>}
         </View>
         <View style={{
           flex: 1,
@@ -124,10 +128,7 @@ class Profile extends React.Component {
           marginBottom: "10%"
         }}>
           <H3 style={{ color: 'white' }}>Email: {this.state.email}</H3>
-          <H3 style={{ color: 'white' }}>Address: {this.state.address.city}</H3>
-          <H3 style={{ color: 'white' }}>Province: {this.state.address.province}</H3>
-          <H3 style={{ color: 'white' }}>Country: {this.state.address.country}</H3>
-          <H3 style={{ color: 'white' }}>CM: {this.state.isCM}</H3>
+          <H3 style={{ color: 'white' }}>Address: {this.state.address.city + ", " + this.state.address.province + ", " + this.state.address.country}</H3>
         </View>
 
         <View>
