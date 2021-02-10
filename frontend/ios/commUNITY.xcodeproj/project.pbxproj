@@ -24,6 +24,7 @@
 		496113B3BFED09250091C7B3 /* libPods-commUNITY-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 68589B4BCD354E369DBC6E24 /* libPods-commUNITY-tvOS.a */; };
 		496E0F88A65F446A8615C7AA /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BA2E9B2A776F48AAA116049A /* EvilIcons.ttf */; };
 		4ED2E4AF3B3748ADB9743519 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 99ACC8CC75434469BCD1FCBB /* Foundation.ttf */; };
+		5359916F5C0F8211667FEEBF /* libPods-commUNITY.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 110B63055ACE72ECB3FFA588 /* libPods-commUNITY.a */; };
 		628AD791B8504056B1118172 /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8817D8EDC4754AE9B3B805A7 /* rubicon-icon-font.ttf */; };
 		68A053E2627244EBAF78DBD5 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5251AEF1E6141679FABDE5E /* FontAwesome5_Regular.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -119,6 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5359916F5C0F8211667FEEBF /* libPods-commUNITY.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -504,12 +506,16 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-commUNITY-commUNITYTests/Pods-commUNITY-commUNITYTests-resources.sh",
 				"${PODS_ROOT}/MapboxMobileEvents/MapboxMobileEvents/Resources/logger.html",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/QBImagePicker.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TOCropViewController/TOCropViewControllerBundle.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/logger.html",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TOCropViewControllerBundle.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -546,12 +552,16 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-commUNITY/Pods-commUNITY-resources.sh",
 				"${PODS_ROOT}/MapboxMobileEvents/MapboxMobileEvents/Resources/logger.html",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/QBImagePicker.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TOCropViewController/TOCropViewControllerBundle.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/logger.html",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TOCropViewControllerBundle.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -588,28 +598,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-commUNITY-commUNITYTests/Pods-commUNITY-commUNITYTests-frameworks.sh",
 				"${PODS_ROOT}/@react-native-mapbox-gl-mapbox-static/dynamic/MapboxMobileEvents.framework",
-				"${PODS_ROOT}/@react-native-mapbox-gl-mapbox-static/dynamic/MapboxMobileEvents.framework.dSYM",
-				"${PODS_ROOT}/@react-native-mapbox-gl-mapbox-static/dynamic/EF3F193B-8B19-3D7A-9C4D-CC7ACB8FD1B2.bcsymbolmap",
-				"${PODS_ROOT}/@react-native-mapbox-gl-mapbox-static/dynamic/AF8AFA46-95A0-3C36-89B4-0A23D7D0A613.bcsymbolmap",
-				"${PODS_ROOT}/@react-native-mapbox-gl-mapbox-static/dynamic/224E36C4-6533-3853-8416-A668FDC17C35.bcsymbolmap",
-				"${PODS_ROOT}/@react-native-mapbox-gl-mapbox-static/dynamic/E1D60A9C-E180-3412-BFDB-809E8A1C178E.bcsymbolmap",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/EF3F193B-8B19-3D7A-9C4D-CC7ACB8FD1B2.bcsymbolmap",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/AF8AFA46-95A0-3C36-89B4-0A23D7D0A613.bcsymbolmap",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/224E36C4-6533-3853-8416-A668FDC17C35.bcsymbolmap",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/E1D60A9C-E180-3412-BFDB-809E8A1C178E.bcsymbolmap",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMobileEvents.framework",
-				"${DWARF_DSYM_FOLDER_PATH}/MapboxMobileEvents.framework.dSYM",
-				"${BUILT_PRODUCTS_DIR}/EF3F193B-8B19-3D7A-9C4D-CC7ACB8FD1B2.bcsymbolmap",
-				"${BUILT_PRODUCTS_DIR}/AF8AFA46-95A0-3C36-89B4-0A23D7D0A613.bcsymbolmap",
-				"${BUILT_PRODUCTS_DIR}/224E36C4-6533-3853-8416-A668FDC17C35.bcsymbolmap",
-				"${BUILT_PRODUCTS_DIR}/E1D60A9C-E180-3412-BFDB-809E8A1C178E.bcsymbolmap",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework",
-				"${DWARF_DSYM_FOLDER_PATH}/Mapbox.framework.dSYM",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -624,28 +618,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-commUNITY/Pods-commUNITY-frameworks.sh",
 				"${PODS_ROOT}/@react-native-mapbox-gl-mapbox-static/dynamic/MapboxMobileEvents.framework",
-				"${PODS_ROOT}/@react-native-mapbox-gl-mapbox-static/dynamic/MapboxMobileEvents.framework.dSYM",
-				"${PODS_ROOT}/@react-native-mapbox-gl-mapbox-static/dynamic/EF3F193B-8B19-3D7A-9C4D-CC7ACB8FD1B2.bcsymbolmap",
-				"${PODS_ROOT}/@react-native-mapbox-gl-mapbox-static/dynamic/AF8AFA46-95A0-3C36-89B4-0A23D7D0A613.bcsymbolmap",
-				"${PODS_ROOT}/@react-native-mapbox-gl-mapbox-static/dynamic/224E36C4-6533-3853-8416-A668FDC17C35.bcsymbolmap",
-				"${PODS_ROOT}/@react-native-mapbox-gl-mapbox-static/dynamic/E1D60A9C-E180-3412-BFDB-809E8A1C178E.bcsymbolmap",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/EF3F193B-8B19-3D7A-9C4D-CC7ACB8FD1B2.bcsymbolmap",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/AF8AFA46-95A0-3C36-89B4-0A23D7D0A613.bcsymbolmap",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/224E36C4-6533-3853-8416-A668FDC17C35.bcsymbolmap",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/E1D60A9C-E180-3412-BFDB-809E8A1C178E.bcsymbolmap",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMobileEvents.framework",
-				"${DWARF_DSYM_FOLDER_PATH}/MapboxMobileEvents.framework.dSYM",
-				"${BUILT_PRODUCTS_DIR}/EF3F193B-8B19-3D7A-9C4D-CC7ACB8FD1B2.bcsymbolmap",
-				"${BUILT_PRODUCTS_DIR}/AF8AFA46-95A0-3C36-89B4-0A23D7D0A613.bcsymbolmap",
-				"${BUILT_PRODUCTS_DIR}/224E36C4-6533-3853-8416-A668FDC17C35.bcsymbolmap",
-				"${BUILT_PRODUCTS_DIR}/E1D60A9C-E180-3412-BFDB-809E8A1C178E.bcsymbolmap",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework",
-				"${DWARF_DSYM_FOLDER_PATH}/Mapbox.framework.dSYM",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
