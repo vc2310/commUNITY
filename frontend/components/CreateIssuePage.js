@@ -193,17 +193,6 @@ class CreateIssuePage extends React.Component {
                     </View>
                   </TouchableOpacity>
                 </ImageBackground>
-                // <View>
-                //   <Image source={{ uri: img.uri }} key={index} style={{ width: 100, height: 100 }} />
-                //   <Button
-                //     onPress={() => {
-                //       this.deleteImage(index);
-                //     }}
-                //     title="Press Me"
-                //   >
-                //     <Text>Delete</Text>
-                //   </Button>
-                // </View>
               ))}
             </ScrollView>
           </View>
