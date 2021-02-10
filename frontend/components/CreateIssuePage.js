@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { View, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
+import { View, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView, Image, ImageBackground } from "react-native";
 import { searchLocationAutoComplete } from "../services/mapbox/MapboxService"
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import LocationAutocomplete from '../components/LocationAutocomplete'
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { getUser, logout } from "../services/auth/AuthService"
 import { createIssue } from "../services/issue/IssueService"
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 class CreateIssuePage extends React.Component {
   constructor(props) {
@@ -174,10 +175,35 @@ class CreateIssuePage extends React.Component {
                 <Text>Take Photo</Text>
               </TouchableOpacity>
               {this.state.issue.images.map((img, index) => (
-                <View>
-                  <Image source={{ uri: img.uri }} key={index} style={{ width: 100, height: 100 }} />
-                  <Button onPress={deleteImage(index)}><Text>Delete</Text></Button>
-                </View>
+                <ImageBackground
+                  source={{ uri: img.uri }}
+                  key={index}
+                  style={{ width: 100, height: 100 }}
+                >
+                  <TouchableOpacity onPress={() => {
+                    this.deleteImage(index);
+                  }}>
+                    <View style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      margin: 1,
+                      padding: 1
+                    }}>
+                      <FontAwesome name="times-circle" size={30} color="#0275d8" />
+                    </View>
+                  </TouchableOpacity>
+                </ImageBackground>
+                // <View>
+                //   <Image source={{ uri: img.uri }} key={index} style={{ width: 100, height: 100 }} />
+                //   <Button
+                //     onPress={() => {
+                //       this.deleteImage(index);
+                //     }}
+                //     title="Press Me"
+                //   >
+                //     <Text>Delete</Text>
+                //   </Button>
+                // </View>
               ))}
             </ScrollView>
           </View>
