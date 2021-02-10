@@ -48,37 +48,39 @@ class Profile extends React.Component {
   }
 
   componentDidMount() {
-    getUser().then((res) => {
-      res.user.email.then((email) => {
-        this.setState({ email: email })
-      })
-      res.user.firstName.then((firstName) => {
-        this.setState({ firstName: firstName })
-      })
-      res.user.lastName.then((lastName) => {
-        this.setState({ lastName: lastName })
-      })
-      res.user.lastName.then((token) => {
-        this.setState({ token: token })
-      })
-      res.user.address.city.then((city) => {
-        res.user.address.province.then((province) => {
-          res.user.address.country.then((country) => {
-            console.log(city, province, country)
-            this.setState({ address: { city: city, province: province, country: country } })
-          })
+    this.load()
+    this.props.navigation.addListener('willFocus', this.load)
+  }
+  load = () => {
+  getUser().then((res) => {
+    res.user.email.then((email) => {
+      this.setState({ email: email })
+    })
+    res.user.firstName.then((firstName) => {
+      this.setState({ firstName: firstName })
+    })
+    res.user.lastName.then((lastName) => {
+      this.setState({ lastName: lastName })
+    })
+    res.user.lastName.then((token) => {
+      this.setState({ token: token })
+    })
+    res.user.address.city.then((city) => {
+      res.user.address.province.then((province) => {
+        res.user.address.country.then((country) => {
+          console.log(city, province, country)
+          this.setState({ address: { city: city, province: province, country: country } })
         })
       })
-      res.user.id.then((internalId) => {
-        this.setState({ internalId: internalId })
-      })
-      res.user.isCM.then((isCM) => {
-        this.setState({ isCM: isCM })
-      })
     })
-  }
+    res.user.id.then((internalId) => {
+      this.setState({ internalId: internalId })
+    })
+    res.user.isCM.then((isCM) => {
+      this.setState({ isCM: isCM })
+    })
+  })
 
-  render() {
     getIssues({ "createdBy": `${this.state.internalId}` }).then((response) => {
       // Most recent issues show up first
       var tempIssues = response.issues.reverse()
@@ -86,7 +88,9 @@ class Profile extends React.Component {
     }).catch((err) => {
       console.log(err)
     })
+  }
 
+  render() {
     const profileText = (field) => {
       if (field == 'email') {
         getUser().then((res) => {
