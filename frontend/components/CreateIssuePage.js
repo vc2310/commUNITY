@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Alert, StyleSheet, PermissionsAndroid, TouchableOpacity, ScrollView, Image, Platform } from "react-native";
+import { View, TextInput, Alert, StyleSheet, PermissionsAndroid, TouchableOpacity, ScrollView, Image, Platform, ImageBackground } from "react-native";
 
 import { searchLocationAutoComplete } from "../services/mapbox/MapboxService"
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
@@ -153,6 +153,8 @@ class CreateIssuePage extends React.Component {
               } else if (response.customButton) {
                 console.log('User tapped custom button: ', response.customButton);
                 alert(response.customButton);
+              } else if (response.errorCode){
+                alert("Camera Unavailable");
               } else {
                 const source = { uri: response.uri };
                 console.log('response', JSON.stringify(response));
@@ -190,6 +192,8 @@ class CreateIssuePage extends React.Component {
           } else if (response.customButton) {
             console.log('User tapped custom button: ', response.customButton);
             alert(response.customButton);
+          }else if (response.errorCode){
+            alert("Camera Unavailable");
           } else {
             const source = { uri: response.uri };
             console.log('response', JSON.stringify(response));
@@ -217,78 +221,60 @@ class CreateIssuePage extends React.Component {
               numberOfLines={8} multiline={true}
               onChangeText={(description) => this.setState({issue: {...this.state.issue, description: description}})}
               placeholder="Description" placeholderTextColor= "#bbb" textAlignVertical="top"/>
-            </View>
           </View>
-          <View style={{
-            width: '100%',
-          }}>
-            <ScrollView
-              horizontal={true}
-            >
-              <TouchableOpacity onPress={(e) => {
-                showImagePicker()
-              }} style={{ backgroundColor: 'grey', width: 100, height: 100, justifyContent: "center" }}>
-                <Text>Load Photo</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={(e) => {
-                showCamera()
-              }} style={{ backgroundColor: 'grey', width: 100, height: 100, justifyContent: "center" }}>
-                <Text>Take Photo</Text>
-              </TouchableOpacity>
-              {this.state.issue.images.map((img, index) => {
-                return (<ImageBackground
-                  source={{ uri: img.uri }}
-                  key={index}
-                  style={{ width: 100, height: 100 }}
-                >
-                  <TouchableOpacity onPress={() => {
-                    this.deleteImage(index);
-                  }}>
-                    <View style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      margin: 1,
-                      padding: 1
-                    }}>
-                      <FontAwesome name="times-circle" size={30} color="#0275d8" />
-                    </View>
-                  </TouchableOpacity>
-                </ImageBackground>)
-              })}
-            </ScrollView>
-          </View>
-          <View>
-            <LocationAutocomplete onSelect={(selected) => {
-              var city = ''
-              var province = ''
-              var country = ''
-              selected.context.map((item, index) => {
-                if (item.id.includes('place')) {
-                  city = item.text
-                }
-                else if (item.id.includes('region')) {
-                  province = item.text
-                }
-                else if (item.id.includes('country')) {
-                  country = item.text
-                }
+        </View>
+        <View style={{
+          width: '100%',
+        }}>
+        </View>
+        <View>
+          <LocationAutocomplete onSelect={(selected) => {
+            var city = ''
+            var province = ''
+            var country = ''
+            selected.context.map((item, index) => {
+              if (item.id.includes('place')) {
+                city = item.text
+              }
+              else if (item.id.includes('region')) {
+                province = item.text
+              }
+              else if (item.id.includes('country')) {
+                country = item.text
+              }
 
-              })
-              this.setState({
-                issue: {
-                  ... this.state.issue,
-                  address: { city: city, province: province, country: country },
-                  geometry: selected.center
-                }
-              })
-              this.setState({})
-            }}/>
-            </View>
+            })
+            this.setState({
+              issue: {
+                ... this.state.issue,
+                address: { city: city, province: province, country: country },
+                geometry: selected.center
+              }
+            })
+            this.setState({})
+          }}/>
         </View>
           <ScrollView horizontal={true} style={{width:"100%", height: 110, marginTop: 20, marginBottom: 20}}>
             {this.state.issue.images.map((img, index) => {
-            return <Image source={{uri: img.uri }} key={index} style={{width: 100, height: 100}}/>;
-          })}
+              return (<ImageBackground
+                source={{ uri: img.uri }}
+                key={index}
+                style={{ width: 100, height: 100 }}
+              >
+                <TouchableOpacity onPress={() => {
+                  this.deleteImage(index);
+                }}>
+                  <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    margin: 1,
+                    padding: 1
+                  }}>
+                    <FontAwesome name="times-circle" size={30} color="#0275d8" />
+                  </View>
+                </TouchableOpacity>
+              </ImageBackground>)
+            })}
           </ScrollView>
           <View style={{width: '100%', marginTop: 45}}>
           <TouchableOpacity onPress={(e)=>{ showImagePicker()}}

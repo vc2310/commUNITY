@@ -123,7 +123,7 @@ class Login extends React.Component {
             alignItems: "center",
           }}
         >
-      
+
           <H1 style={{ color: "white" }}>commUNITY</H1>
         </View>
         <View
@@ -197,7 +197,7 @@ class Login extends React.Component {
                 this.setState({ address: { city: city, province: province, country: country } })
               }} />
             </ScrollView>
-          )}
+          }
         </View>
         <View
           style={{
