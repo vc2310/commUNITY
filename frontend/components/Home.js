@@ -1,6 +1,7 @@
 import React from "react";
 import { View, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
+import { IconButton, Colors, Chip } from 'react-native-paper';
 import { Overlay } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import MapboxGL from "@react-native-mapbox-gl/maps";
@@ -32,13 +33,17 @@ class Home extends React.Component {
         addIssue: false,
         issues: [],
         details: false,
-        detailsID: ''
+        detailsID: '',
+        currentCoor: [],
+        zoomLevel: 12,
     }
   }
 
   centerChanged(event){
-    console.log('getting issues', event)
     var query = {"near": {"center": event.geometry.coordinates, "radius": 8}}
+    // this.setState({zoomLevel: event.properties.zoomLevel})
+    // this.setState({center: event.geometry.coordinates})
+    console.log(event, event.properties.zoomLevel, this.state.zoomLevel, this.state.center)
     getIssues(query).then((response)=>{
       this.setState({issues: response.issues})
     }).catch((err)=>{
@@ -75,12 +80,22 @@ class Home extends React.Component {
    return items;
  }
 
+ userLocation(location){
+   if (location){
+     this.setState({currentCoor: [location.coords.longitude, location.coords.latitude]})
+   }
+ }
+
+ focusUser(){
+   this.setState({center: this.state.currentCoor})
+ }
+
   render () {
     return (
       <View style={{flex: 1, height: "100%", width: "100%" }}>
       <MapboxGL.MapView
         styleURL={'mapbox://styles/faisalmuh786/ck84o8v2203891irqnlxkpdi3'}
-        zoomLevel={1}
+        zoomLevel={this.state.zoomLevel}
         style={{flex: 1}}
         onLongPress={(event)=>{console.log('Coords:', event)}}
         onRegionDidChange={(event)=>{this.centerChanged(event)}}>
@@ -92,9 +107,18 @@ class Home extends React.Component {
           	>
           </MapboxGL.Camera>
           {this.renderAnnotations()}
+          <MapboxGL.UserLocation onUpdate={(location) => {this.userLocation(location)}} />
       </MapboxGL.MapView>
       <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "20%", marginLeft: "12.5%"}}>
         <LocationAutocomplete onSelect={(item) => {this.setState({ center: item.center})}}/>
+      </View>
+      <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "20%", marginLeft: "75%"}}>
+        <IconButton
+          icon={{ uri: 'https://simpleicon.com/wp-content/uploads/map-marker-17.png' }}
+          color={Colors.blue500}
+          size={40}
+          onPress={(e) => { this.focusUser() }}
+        />
       </View>
       <View style={{position: 'absolute', width: "75%", marginTop: "180%", marginLeft: "82.5%"}}>
       <Button onPress={()=> this.setState({addIssue: true})}>

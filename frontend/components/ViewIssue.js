@@ -8,6 +8,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { getUser, logout } from "../services/auth/AuthService"
 import { createIssue, getIssue, commentIssue, changeStatus } from "../services/issue/IssueService"
 import DropDownPicker from 'react-native-dropdown-picker';
+import { constants } from '../services/constants/constants'
 
 class ViewIssue extends React.Component {
   constructor(props){
@@ -48,6 +49,7 @@ class ViewIssue extends React.Component {
       res.user.isCM.then((isCM)=> {
         this.setState({isCM: isCM})
       })
+
     })
     this.getIssues()
   }
@@ -92,7 +94,7 @@ class ViewIssue extends React.Component {
         </View>
         <ScrollView horizontal={true}>
         {this.state.issue.images.map((img, index) => {
-          return <Image source={{uri: 'http://localhost:3000/v1/'+img+'/image'}} key={index} style={{width: 100, height: 100}}/>;
+          return <Image source={{uri: constants.commUNITY_URI+'/v1/'+img+'/image'}} key={index} style={{width: 100, height: 100}}/>;
         })}
         </ScrollView>
         <Text>{this.state.issue.description}</Text>
@@ -105,7 +107,7 @@ class ViewIssue extends React.Component {
             return <View style={{backgroundColor: '#1c2636', borderWidth: 0.5}}><Text>{comment[0]}</Text></View>
           })}
         </ScrollView>
-        {this.state.isCM === '1' &&
+        {this.state.isCM === '1' && this.state.userCity === this.state.issue.address.city &&
           <View>
             <View style={{flexDirection: 'row'}}>
               <TextInput stye={styles.textArea}

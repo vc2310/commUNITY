@@ -1,8 +1,8 @@
 import React from 'react';
-
+import { constants } from '../constants/constants'
 export const createIssue = (formData) => {
   return new Promise((resolve, reject) => {
-    fetch('http://localhost:3000/v1/createIssue', {
+    fetch(constants.commUNITY_URI+'/v1/createIssue', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -25,7 +25,7 @@ export const upVoteIssue = (createdBy, issueID) => {
   var upvote = {createdBy: createdBy, issueID: issueID}
   return new Promise((resolve, reject) => {
     var body = JSON.stringify({upvote})
-    fetch('http://localhost:3000/v1/upVoteIssue', {
+    fetch(constants.commUNITY_URI+'/v1/upVoteIssue', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -50,7 +50,7 @@ export const downVoteIssue = (createdBy, issueID) => {
   var downvote = {createdBy: createdBy, issueID: issueID}
   return new Promise((resolve, reject) => {
     var body = JSON.stringify({downvote})
-    fetch('http://localhost:3000/v1/downVoteIssue', {
+    fetch(constants.commUNITY_URI+'/v1/downVoteIssue', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -75,7 +75,7 @@ export const commentIssue = (createdBy, issueID, text) => {
   var comment = {createdBy: createdBy, issueID: issueID, text: text}
   return new Promise((resolve, reject) => {
     var body = JSON.stringify({comment})
-    fetch('http://localhost:3000/v1/commentIssue', {
+    fetch(constants.commUNITY_URI+'/v1/commentIssue', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -100,7 +100,7 @@ export const changeStatus = (issueID, status) => {
   var issue = {issueID: issueID, status: status}
   return new Promise((resolve, reject) => {
     var body = JSON.stringify({issue})
-    fetch('http://localhost:3000/v1/statusIssue', {
+    fetch(constants.commUNITY_URI+'/v1/statusIssue', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -124,7 +124,7 @@ export const changeStatus = (issueID, status) => {
 export const getIssues = (query) => {
   return new Promise((resolve, reject) => {
     var queryString = JSON.stringify({query: query})
-    fetch('http://localhost:3000/v1/getIssues/' + queryString, {
+    fetch(constants.commUNITY_URI+'/v1/getIssues/' + queryString, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -143,7 +143,7 @@ export const getIssues = (query) => {
 
 export const getIssue = (id) => {
   return new Promise((resolve, reject) => {
-    fetch('http://localhost:3000/v1/getIssue/'+id, {
+    fetch(constants.commUNITY_URI+'/v1/getIssue/'+id, {
       method: 'GET',
       headers: {
         Accept: 'application/json',

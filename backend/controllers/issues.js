@@ -149,6 +149,9 @@ export const getIssues = (req, res, next) => {
        { $centerSphere: [ query.near.center, query.near.radius/ 3963.2 ] }
      }
   }
+  if (query.address){
+    finalQuery["address"] = query.address
+  }
   console.log(finalQuery)
   return Issue.find(finalQuery)
     .then((issues) => {
