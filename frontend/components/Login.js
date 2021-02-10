@@ -49,6 +49,7 @@ class Login extends React.Component {
     }
     return "Login";
   }
+
   submitDisabled() {
     if (
       this.state.login &&
@@ -70,6 +71,7 @@ class Login extends React.Component {
     }
     return true;
   }
+
   submit() {
     if (this.state.login) {
       login(this.state.email, this.state.password)
@@ -121,6 +123,7 @@ class Login extends React.Component {
             alignItems: "center",
           }}
         >
+
           <H1 style={{ color: "white" }}>commUNITY</H1>
         </View>
         <View
@@ -146,10 +149,11 @@ class Login extends React.Component {
               placeholder="Password"
             />
           </View>
-          {!this.state.login && (
-            <ScrollView style={{ width: "90%" }}>
-              <TextInput
-                style={styles.TextInputStyleClass}
+          {!this.state.login &&
+
+            <ScrollView style={{ width: '90%' }}>
+
+              <TextInput style={styles.TextInputStyleClass}
                 onChangeText={(firstName) => this.setState({ firstName })}
                 placeholder="First Name"
               />
@@ -170,34 +174,30 @@ class Login extends React.Component {
               <TextInput
                 style={styles.TextInputStyleClass}
                 onChangeText={(lastName) => this.setState({ lastName })}
-                placeholder="Last Name"
-              />
+                placeholder="Last Name" />
 
-              <LocationAutocomplete
-                onSelect={(selected) => {
-                  var city = "";
-                  var province = "";
-                  var country = "";
-                  selected.context.map((item, index) => {
-                    if (item.id.includes("place")) {
-                      city = item.text;
-                    } else if (item.id.includes("region")) {
-                      province = item.text;
-                    } else if (item.id.includes("country")) {
-                      country = item.text;
-                    }
-                  });
-                  this.setState({
-                    address: {
-                      city: city,
-                      province: province,
-                      country: country,
-                    },
-                  });
-                }}
-              />
+              <LocationAutocomplete onSelect={(selected) => {
+                var city = ''
+                var province = ''
+                var country = ''
+
+                selected.context.map((item, index) => {
+                  if (item.id.includes('place')) {
+                    city = item.text
+                  }
+                  else if (item.id.includes('region')) {
+                    province = item.text
+                  }
+                  else if (item.id.includes('country')) {
+                    country = item.text
+                  }
+
+                })
+
+                this.setState({ address: { city: city, province: province, country: country } })
+              }} />
             </ScrollView>
-          )}
+          }
         </View>
         <View
           style={{
@@ -207,6 +207,7 @@ class Login extends React.Component {
             flexDirection: "column",
           }}
         >
+
           <View>
             <Button
               style={{

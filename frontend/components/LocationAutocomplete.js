@@ -7,7 +7,7 @@ import { Container, Header, Content, Button, Text, H1 } from "native-base";
 class LocationAutocomplete extends React.Component {
   constructor(props){
     super(props);
-    console.log(this.props.text)
+    console.log(this.props)
     this.state = {
       query: this.props.text,
       data: []
@@ -37,6 +37,7 @@ class LocationAutocomplete extends React.Component {
           value={this.state.query}
           placeholder="Search for a location"
           style={styles.TextInputStyleClass}
+          inputContainerStyle={{ borderWidth: 0 }}
           onChangeText={(text) => autocompleteChanged(text)}
           renderItem={({ item, i }) => (
             <TouchableOpacity style={{height: 30, justifyContent: "center"}} onPress={() => handlePress(item)}>

@@ -64,47 +64,45 @@ class Profile extends React.Component {
     this.props.navigation.addListener("willFocus", this.load);
   }
   load = () => {
-    getUser().then((res) => {
-      res.user.email.then((email) => {
-        this.setState({ email: email });
-      });
-      res.user.firstName.then((firstName) => {
-        this.setState({ firstName: firstName });
-      });
-      res.user.lastName.then((lastName) => {
-        this.setState({ lastName: lastName });
-      });
-      res.user.lastName.then((token) => {
-        this.setState({ token: token });
-      });
-      res.user.address.city.then((city) => {
-        res.user.address.province.then((province) => {
-          res.user.address.country.then((country) => {
-            console.log(city, province, country);
-            this.setState({
-              address: { city: city, province: province, country: country },
-            });
-          });
-        });
-      });
-      res.user.id.then((internalId) => {
-        this.setState({ internalId: internalId });
-      });
-      res.user.isCM.then((isCM) => {
-        this.setState({ isCM: isCM });
-      });
-    });
-
-    getIssues({ createdBy: `${this.state.internalId}` })
-      .then((response) => {
-        // Most recent issues show up first
-        var tempIssues = response.issues.reverse();
-        this.setState({ userIssues: tempIssues });
+  getUser().then((res) => {
+    res.user.email.then((email) => {
+      this.setState({ email: email })
+    })
+    res.user.firstName.then((firstName) => {
+      this.setState({ firstName: firstName })
+    })
+    res.user.lastName.then((lastName) => {
+      this.setState({ lastName: lastName })
+    })
+    res.user.lastName.then((token) => {
+      this.setState({ token: token })
+    })
+    res.user.address.city.then((city) => {
+      res.user.address.province.then((province) => {
+        res.user.address.country.then((country) => {
+          console.log(city, province, country)
+          this.setState({ address: { city: city, province: province, country: country } })
+        })
       })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+    })
+    res.user.id.then((internalId) => {
+      this.setState({ internalId: internalId })
+
+      getIssues({ "createdBy": internalId }).then((response) => {
+        // Most recent issues show up first
+        console.log(this.state.userIssues)
+        var tempIssues = response.issues.reverse()
+        this.setState({ userIssues: tempIssues })
+      }).catch((err) => {
+        console.log(err)
+      })
+    })
+    res.user.isCM.then((isCM) => {
+      this.setState({ isCM: isCM })
+    })
+  })
+
+  }
 
   render() {
     const profileText = (field) => {
