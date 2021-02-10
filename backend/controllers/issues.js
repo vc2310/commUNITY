@@ -171,8 +171,24 @@ export const getIssue = (req, res, next) => {
 
   return Issue.findById(req.params.id)
     .then((issue) => {
-      var json = issue.toJSON();
-      res.json({issue: json})
+      var comments = []
+      if (issue.comments.length > 0){
+        issue.comments.forEach((comment, index, array) => {
+          User.findById(comment[1]).then((user)=>{
+            var temp = comment
+            temp[1] = user.firstName + " " + user.lastName
+            comments.push(temp)
+            if(index === array.length-1) {
+              issue.comments = comments
+              var json = issue.toJSON();
+              res.json({issue: json})
+            }
+          })
+        })
+      }else{
+        var json = issue.toJSON();
+        res.json({issue: json})
+      }
     }, (error)=>{
       return res.status(400).json({
         errors: {

@@ -68,6 +68,7 @@ export const signup = (email, password, firstname, lastname, address, isCM) => {
     console.log(user)
     var body = JSON.stringify({user})
     console.log(body)
+    console.log(constants.commUNITY_URI);
     fetch(constants.commUNITY_URI+'/v1/signup', {
       method: 'POST',
       headers: {
