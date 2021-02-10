@@ -8,7 +8,7 @@ import { getUser, logout } from "../services/auth/AuthService"
 import { createIssue } from "../services/issue/IssueService"
 
 class CreateIssuePage extends React.Component {
-  
+
   constructor(props){
     super(props);
     this.state = {
@@ -181,7 +181,7 @@ class CreateIssuePage extends React.Component {
     }
 
     return (
-      <ScrollView style={{paddingTop: 20}}>
+      <ScrollView style={{paddingTop: 35}}>
         <View >
           <H1 style={{color: "white"}}>Report Issue</H1>
         </View>
@@ -226,43 +226,43 @@ class CreateIssuePage extends React.Component {
           })}
           </ScrollView>
           <View style={{width: '100%', marginTop: 45}}>
-          <TouchableOpacity onPress={(e)=>{ showImagePicker()}} 
+          <TouchableOpacity onPress={(e)=>{ showImagePicker()}}
               style={{
-                position: "absolute", 
-                backgroundColor: 'white', 
+                position: "absolute",
+                backgroundColor: 'white',
                 bottom: 10,
                 left: 0,
-                width: "45%", 
-                height: 40, 
-                padding: 5,                   
+                width: "45%",
+                height: 40,
+                padding: 5,
                 marginRight: "5%",
                 justifyContent: "center"}}
           >
               <Text style={{width: "100%", textAlign: "center"}}>Load Photo</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={(e)=>{showCamera()}} 
+          <TouchableOpacity onPress={(e)=>{showCamera()}}
             style={{
-              position: "absolute", 
-              backgroundColor: 'white', 
+              position: "absolute",
+              backgroundColor: 'white',
               bottom: 10,
               right: 0,
-              width: "45%", 
-              height: 40, 
-              padding: 5,                   
-              marginLeft: "5%",  
+              width: "45%",
+              height: 40,
+              padding: 5,
+              marginLeft: "5%",
               justifyContent: "center"}}
             >
             <Text style={{width: "100%", textAlign: "center"}}>Take Photo</Text>
-          </TouchableOpacity>    
+          </TouchableOpacity>
         </View>
-        
+
           <View style={{width: "50%", marginTop: 50, marginLeft: "25%"}}>
           <Button disabled={this.submitDisabled()}  onPress={(e)=> {this.submit()}}>
               <Text style={{width: "100%", textAlign: "center"}}>Submit</Text>
             </Button>
             <Button style={{marginTop: 20}} onPress={()=> this.props.close()}>
               <Text style={{width: "100%", textAlign: "center"}}>Back</Text>
-            </Button>        
+            </Button>
           </View>
       </ScrollView>
     );
@@ -299,12 +299,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     padding: 5,
-    
+
   },
   textArea: {
     height: 150,
     justifyContent: "flex-start",
-    fontSize: 18, 
+    fontSize: 18,
     color: "black",
   },
   button: {

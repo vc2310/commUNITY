@@ -112,14 +112,14 @@ class Home extends React.Component {
       this.userLocation(location);
     }
   }
- 
+
 
   render () {
-    
+
     // edit logging messages
     Logger.setLogCallback(log => {
     const { message } = log;
-  
+
     // expected warnings - see https://github.com/mapbox/mapbox-gl-native/issues/15341#issuecomment-522889062
     if (
       message.match('Request failed due to a permanent error: Canceled') ||
@@ -152,7 +152,7 @@ class Home extends React.Component {
       <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "10%", marginLeft: "12.5%"}}>
         <LocationAutocomplete onSelect={(item) => {this.setState({ center: item.center})}}/>
       </View>
-      <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "20%", marginLeft: "75%"}}>
+      <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "160%", marginLeft: "5%"}}>
         <IconButton
           icon={{ uri: 'https://simpleicon.com/wp-content/uploads/map-marker-17.png' }}
           color={Colors.blue500}
