@@ -1,8 +1,12 @@
 import React from "react";
-import { View, TextInput, Alert } from "react-native";
-import { Container, Header, Content, Button, Text, H1 } from "native-base";
+import { View, TextInput, Alert, ScrollView, StyleSheet, Image } from "react-native";
+import { IconButton, Chip } from 'react-native-paper';
+import { Container, Header, Content, Button, Text, H1, H2, H3 } from "native-base";
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { getUser, logout } from "../services/auth/AuthService"
+import { getIssues, getIssue } from "../services/issue/IssueService";
+import { Avatar } from 'react-native-elements';
+
 
 class Profile extends React.Component {
   static navigationOptions = {
@@ -18,81 +22,154 @@ class Profile extends React.Component {
   };
   constructor(props) {
     super(props)
-    this.state =  {
+    this.state = {
       email: 'my email',
       firstName: '',
       lastName: '',
       token: '',
-      address: {city: '', province: '', country: ''},
-      id: '',
-      isCM: ''
+      address: { city: '', province: '', country: '' },
+      internalId: '',
+      isCM: '',
+      userIssues: []
     }
   }
+
   componentDidMount() {
-    getUser().then((res)=> {
-      res.user.email.then((email)=> {
-        this.setState({email: email})})
-      res.user.firstName.then((firstName)=> {
-        this.setState({firstName: firstName})})
-      res.user.lastName.then((lastName)=> {
-        this.setState({lastName: lastName})})
-      res.user.lastName.then((token)=> {
-        this.setState({token: token})})
-      res.user.address.city.then((city)=> {
-        res.user.address.province.then((province)=> {
-          res.user.address.country.then((country)=> {
+    getUser().then((res) => {
+      res.user.email.then((email) => {
+        this.setState({ email: email })
+      })
+      res.user.firstName.then((firstName) => {
+        this.setState({ firstName: firstName })
+      })
+      res.user.lastName.then((lastName) => {
+        this.setState({ lastName: lastName })
+      })
+      res.user.lastName.then((token) => {
+        this.setState({ token: token })
+      })
+      res.user.address.city.then((city) => {
+        res.user.address.province.then((province) => {
+          res.user.address.country.then((country) => {
             console.log(city, province, country)
-              this.setState({address: {city: city, province: province, country: country}})
-            })
+            this.setState({ address: { city: city, province: province, country: country } })
           })
         })
-      res.user.isCM.then((isCM)=> {
-        this.setState({isCM: isCM})})
+      })
+      res.user.id.then((internalId) => {
+        this.setState({ internalId: internalId })
+      })
+      res.user.isCM.then((isCM) => {
+        this.setState({ isCM: isCM })
+      })
     })
+    // .then(() => getIssues({ "createdBy": `${this.state.internalId}` }).then((response) => {
+    //   var tempIssues = response.issues
+    //   tempIssues.sort((a, b) => (a.upVotes.length > b.upVotes.length) ? -1 : (a.upVotes.length < b.upVotes.length) ? 1 : 0)
+    //   this.setState({ userIssues: tempIssues })
+    // }).catch((err) => {
+    //   console.log(err)
+    // }))
   }
-  render () {
+
+  render() {
+    // console.log(this.state.internalId);
+    getIssues({ "createdBy": `${this.state.internalId}` }).then((response) => {
+      // Most recent issues show up first
+      var tempIssues = response.issues.reverse()
+      this.setState({ userIssues: tempIssues })
+    }).catch((err) => {
+      console.log(err)
+    })
+
     const profileText = (field) => {
-      if (field == 'email'){
-        getUser().then((res)=> {
-          res.user.email.then((email)=> {
+      if (field == 'email') {
+        getUser().then((res) => {
+          res.user.email.then((email) => {
             console.log(email)
             return email
           })
         })
-    }
+      }
     }
     return (
-      <Container style={{backgroundColor: '#1c2636'}}>
-      <View style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}>
-        <H1 style={{color: 'white'}}>{this.state.firstName} {this.state.lastName}</H1>
-      </View>
-      <View style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}>
-        <Text>{this.state.email}</Text>
-        <Text>{this.state.address.city}</Text>
-        <Text>{this.state.address.province}</Text>
-        <Text>{this.state.address.country}</Text>
-        <Text>CM: {this.state.isCM}</Text>
-      </View>
+      <ScrollView style={{ backgroundColor: '#1c2636', padding: '5%' }} contentContainerStyle={{ paddingBottom: 60 }}>
         <View style={{
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
+          marginTop: "10%"
         }}>
-          <Button danger onPress={()=> {logout().then(this.props.navigation.navigate("Login")).catch((error)=>{console.log(error)})}}>
+          <H1 style={{ color: 'white' }}>{this.state.firstName} {this.state.lastName}</H1>
+        </View>
+        <View style={{
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+          <Avatar
+            placeholderStyle={{ backgroundColor: '#efd7d7' }}
+            size="xlarge"
+            rounded
+            title={this.state.firstName.charAt(0).toUpperCase() + this.state.lastName.charAt(0).toUpperCase()}
+          />
+        </View>
+        <View style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: "10%"
+        }}>
+          <H3 style={{ color: 'white' }}>Email: {this.state.email}</H3>
+          <H3 style={{ color: 'white' }}>Address: {this.state.address.city}</H3>
+          <H3 style={{ color: 'white' }}>Province: {this.state.address.province}</H3>
+          <H3 style={{ color: 'white' }}>Country: {this.state.address.country}</H3>
+          <H3 style={{ color: 'white' }}>CM: {this.state.isCM}</H3>
+        </View>
+
+        <View>
+          <H1 style={{ color: 'white' }}>Your Issues</H1>
+          <View>
+            {
+              this.state.userIssues.map((item, index) => (
+                <View key={item.id} style={styles.item}>
+                  <View style={{ flexDirection: 'column' }}>
+                    <View>
+                      <Text style={{ fontWeight: 'bold', color: 'white' }}>{item.title}</Text>
+                      <Text style={{ color: 'white' }}>{item.description}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'column', minWidth: '50%', maxWidth: '60%' }}>
+                      <Chip icon="information">{item.status.charAt(0).toUpperCase() + item.status.slice(1)}</Chip>
+                    </View>
+                  </View>
+                </View>
+              ))
+            }
+          </View>
+        </View>
+
+        <View style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "10%"
+        }}>
+          <Button danger onPress={() => { logout().then(this.props.navigation.navigate("Login")).catch((error) => { console.log(error) }) }}>
             <Text>LogOut</Text>
           </Button>
         </View>
-      </Container>
+      </ScrollView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  item: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 30,
+    borderWidth: 0.5,
+  }
+})
 
 export default Profile;

@@ -65,18 +65,18 @@ class Search extends React.Component {
     })
   }
 
-  status(status) {
-    if (status === 'new') {
-      return 'New'
-    }
-    else if (status === 'inProgress') {
-      return 'In Progress'
-    }
-    else if (status === 'resolved') {
-      return 'Resolved'
-    }
-    return ''
-  }
+  // status(status) {
+  //   if (status === 'new') {
+  //     return 'New'
+  //   }
+  //   else if (status === 'inProgress') {
+  //     return 'In Progress'
+  //   }
+  //   else if (status === 'resolved') {
+  //     return 'Resolved'
+  //   }
+  //   return ''
+  // }
 
   downvote(issueID) {
     downVoteIssue(this.state.userID, issueID).then((response) => {
@@ -114,7 +114,7 @@ class Search extends React.Component {
                     <Text style={{ color: 'white' }}>{item.description}</Text>
                   </View>
                   <View style={{ flexDirection: 'column' }}>
-                    <Chip icon="information">{this.status(item.status)}</Chip>
+                    <Chip icon="information">{item.status.charAt(0).toUpperCase() + item.status.slice(1)}</Chip>
                   </View>
                 </View>
                 <View style={{ flexDirection: 'row' }}>
