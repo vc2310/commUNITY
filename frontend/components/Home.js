@@ -1,10 +1,10 @@
 import React from "react";
-import { View, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, TextInput, Alert, StyleSheet, Platform, PermissionsAndroid, TouchableOpacity, ScrollView } from "react-native";
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import { IconButton, Colors, Chip } from 'react-native-paper';
 import { Overlay } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import MapboxGL from "@react-native-mapbox-gl/maps";
+import MapboxGL, { Logger } from "@react-native-mapbox-gl/maps";
 import LocationAutocomplete from '../components/LocationAutocomplete'
 import CreateIssuePage from '../components/CreateIssuePage'
 import ViewIssue from '../components/ViewIssue'
@@ -90,7 +90,47 @@ class Home extends React.Component {
    this.setState({center: this.state.currentCoor})
  }
 
+ //Requesting Android locations permission, if not already granted
+ getAndroidLocationPermission = async () => {
+    try {
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+        if ( granted === PermissionsAndroid.RESULTS.GRANTED ) {
+          console.log("granted");
+          return true;
+        }
+        console.log("not granted");
+        return false;
+    } catch ( err ) {
+      return err;
+    }
+  }
+
+  getUserLocation = (location) => {
+    if (Platform.OS == "android" && !this.getAndroidLocationPermission()) {
+      console.log("User Location cannot be provided due to permissions");
+    } else {
+      this.userLocation(location);
+    }
+  }
+ 
+
   render () {
+    
+    // edit logging messages
+    Logger.setLogCallback(log => {
+    const { message } = log;
+  
+    // expected warnings - see https://github.com/mapbox/mapbox-gl-native/issues/15341#issuecomment-522889062
+    if (
+      message.match('Request failed due to a permanent error: Canceled') ||
+      message.match('Request failed due to a permanent error: Socket Closed')
+    ) {
+      return true;
+    }
+    return false;
+    });
+
+
     return (
       <View style={{flex: 1, height: "100%", width: "100%" }}>
       <MapboxGL.MapView
@@ -107,9 +147,9 @@ class Home extends React.Component {
           	>
           </MapboxGL.Camera>
           {this.renderAnnotations()}
-          <MapboxGL.UserLocation onUpdate={(location) => {this.userLocation(location)}} />
+          <MapboxGL.UserLocation onUpdate={(location) => {this.getUserLocation(location)}} />
       </MapboxGL.MapView>
-      <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "20%", marginLeft: "12.5%"}}>
+      <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "10%", marginLeft: "12.5%"}}>
         <LocationAutocomplete onSelect={(item) => {this.setState({ center: item.center})}}/>
       </View>
       <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "20%", marginLeft: "75%"}}>
@@ -120,17 +160,17 @@ class Home extends React.Component {
           onPress={(e) => { this.focusUser() }}
         />
       </View>
-      <View style={{position: 'absolute', width: "75%", marginTop: "180%", marginLeft: "82.5%"}}>
+      <View style={{position: 'absolute', width: "75%", marginTop: "160%", marginLeft: "82.5%"}}>
       <Button onPress={()=> this.setState({addIssue: true})}>
         <Text>+</Text>
       </Button>
-      <Overlay isVisible={this.state.addIssue} fullScreen={true} onBackdropPress={()=> this.setState({addIssue: false})}>
+      </View>
+      <Overlay overlayStyle={{backgroundColor: "#1c2636"}} isVisible={this.state.addIssue} fullScreen={true} onBackdropPress={()=> this.setState({addIssue: false})}>
         <CreateIssuePage close={()=> this.setState({addIssue: false})}/>
       </Overlay>
       <Overlay isVisible={this.state.details} fullScreen={true} onBackdropPress={()=> this.setState({details: false, detailsID: ''})}>
         <ViewIssue close={()=> this.setState({details: false})} id={this.state.detailsID}></ViewIssue>
       </Overlay>
-      </View>
     </View>
     );
   }

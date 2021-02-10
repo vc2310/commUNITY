@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
+import { View, TextInput, Alert, StyleSheet, PermissionsAndroid, TouchableOpacity, ScrollView, Image, Platform } from "react-native";
 import { searchLocationAutoComplete } from "../services/mapbox/MapboxService"
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import LocationAutocomplete from '../components/LocationAutocomplete'
@@ -8,6 +8,7 @@ import { getUser, logout } from "../services/auth/AuthService"
 import { createIssue } from "../services/issue/IssueService"
 
 class CreateIssuePage extends React.Component {
+  
   constructor(props){
     super(props);
     this.state = {
@@ -86,7 +87,7 @@ class CreateIssuePage extends React.Component {
      multiple: true,
    };
 
-     const showImagePicker = (): void => {
+     const showImagePicker = () => {
        launchImageLibrary(options, (response) => {
          console.log('Response = ', response);
 
@@ -109,69 +110,91 @@ class CreateIssuePage extends React.Component {
        });
     };
 
-    const showCamera = (): void => {
-      launchCamera({
-          storageOptions: {
-            skipBackup: true,
-            path: 'images',
-          },
-        }, (response) => {
-        console.log('Response = ', response);
+    const getAndroidCameraPermissions = async () => {
 
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
-          alert(response.customButton);
+      try {
+        //Requesting Android location permission, if not already granted
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log("Camera permission granted!");
+            launchCamera({
+              storageOptions: {
+                skipBackup: true,
+                path: 'images',
+                },
+              }, (response) => {
+              console.log('Response = ', response);
+
+              if (response.didCancel) {
+                console.log('User cancelled image picker');
+              } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+              } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+                alert(response.customButton);
+              } else {
+                const source = { uri: response.uri };
+                console.log('response', JSON.stringify(response));
+                var temp = this.state.issue.images
+                temp.push(response)
+                this.setState({issue: {...this.state.issue, images: temp}});
+              }
+            })
         } else {
-          const source = { uri: response.uri };
-          console.log('response', JSON.stringify(response));
-          var temp = this.state.issue.images
-          temp.push(response)
-          this.setState({issue: {...this.state.issue, images: temp}});
+          console.log("Camera permission denied!");
         }
-      })
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+
+    const showCamera = () => {
+
+      //Checking camera permissions during runtime is required for all Android versions after Marshmallow
+      if (Platform.OS == 'android') {
+         getAndroidCameraPermissions();
+      } else {
+          launchCamera({
+            storageOptions: {
+              skipBackup: true,
+              path: 'images',
+            },
+          }, (response) => {
+          console.log('Response = ', response);
+
+          if (response.didCancel) {
+            console.log('User cancelled image picker');
+          } else if (response.error) {
+            console.log('ImagePicker Error: ', response.error);
+          } else if (response.customButton) {
+            console.log('User tapped custom button: ', response.customButton);
+            alert(response.customButton);
+          } else {
+            const source = { uri: response.uri };
+            console.log('response', JSON.stringify(response));
+            var temp = this.state.issue.images
+            temp.push(response)
+            this.setState({issue: {...this.state.issue, images: temp}});
+          }
+        })
+      }
     }
 
     return (
-      <ScrollView>
-        <View style={styles.inputContainer}>
+      <ScrollView style={{paddingTop: 20}}>
         <View >
-          <H1>Report Issue</H1>
+          <H1 style={{color: "white"}}>Report Issue</H1>
         </View>
-        <View stye={{backgroundColor: 'black'}}>
-          <TextInput stye={styles.textInput}
-            onChangeText={(title) => this.setState({issue: {...this.state.issue, title: title}})}
-            placeholder="Title" />
+        <View stlye={{backgroundColor: 'white'}}>
+          <TextInput style={styles.textInput}
+            onPress={e => console.log("Clicked")} onChangeText={(title) => this.setState({issue: {...this.state.issue, title: title}})}
+            placeholder="Title" placeholderTextColor= "#bbb"
+            />
           <View style={styles.textAreaContainer} >
-            <TextInput stye={styles.textArea}
-              numberOfLines={9}
+            <TextInput style={styles.textArea}
+              numberOfLines={8} multiline={true}
               onChangeText={(description) => this.setState({issue: {...this.state.issue, description: description}})}
-              placeholder="Description" />
-          </View>
-        </View>
-        <View style={{
-          width: '100%',
-        }}>
-          <ScrollView
-          horizontal={true}
-          >
-            <TouchableOpacity onPress={(e)=>{
-              showImagePicker()
-            }} style={{backgroundColor: 'grey', width: 100, height: 100, justifyContent: "center"}}>
-              <Text>Load Photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={(e)=>{
-              showCamera()
-            }} style={{backgroundColor: 'grey', width: 100, height: 100, justifyContent: "center"}}>
-              <Text>Take Photo</Text>
-            </TouchableOpacity>
-          {this.state.issue.images.map((img, index) => {
-            return <Image source={{uri: img.uri }} key={index} style={{width: 100, height: 100}}/>;
-          })}
-          </ScrollView>
+              placeholder="Description" placeholderTextColor= "#bbb" textAlignVertical="top"/>
           </View>
           <View>
             <LocationAutocomplete onSelect={(selected) => {
@@ -196,15 +219,51 @@ class CreateIssuePage extends React.Component {
               this.setState({})
             }}/>
             </View>
-          <View style={{position: 'absolute', width: "75%", marginTop: "180%", marginLeft: "12.5%"}}>
-            <Button onPress={()=> this.props.close()}>
-              <Text>Back</Text>
-            </Button>
-            <Button disabled={this.submitDisabled()}  onPress={(e)=> {this.submit()}}>
-              <Text>Submit</Text>
-            </Button>
-          </View>
         </View>
+          <ScrollView horizontal={true} style={{width:"100%", height: 110, marginTop: 20, marginBottom: 20}}>
+            {this.state.issue.images.map((img, index) => {
+            return <Image source={{uri: img.uri }} key={index} style={{width: 100, height: 100}}/>;
+          })}
+          </ScrollView>
+          <View style={{width: '100%', marginTop: 45}}>
+          <TouchableOpacity onPress={(e)=>{ showImagePicker()}} 
+              style={{
+                position: "absolute", 
+                backgroundColor: 'white', 
+                bottom: 10,
+                left: 0,
+                width: "45%", 
+                height: 40, 
+                padding: 5,                   
+                marginRight: "5%",
+                justifyContent: "center"}}
+          >
+              <Text style={{width: "100%", textAlign: "center"}}>Load Photo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={(e)=>{showCamera()}} 
+            style={{
+              position: "absolute", 
+              backgroundColor: 'white', 
+              bottom: 10,
+              right: 0,
+              width: "45%", 
+              height: 40, 
+              padding: 5,                   
+              marginLeft: "5%",  
+              justifyContent: "center"}}
+            >
+            <Text style={{width: "100%", textAlign: "center"}}>Take Photo</Text>
+          </TouchableOpacity>    
+        </View>
+        
+          <View style={{width: "50%", marginTop: 50, marginLeft: "25%"}}>
+          <Button disabled={this.submitDisabled()}  onPress={(e)=> {this.submit()}}>
+              <Text style={{width: "100%", textAlign: "center"}}>Submit</Text>
+            </Button>
+            <Button style={{marginTop: 20}} onPress={()=> this.props.close()}>
+              <Text style={{width: "100%", textAlign: "center"}}>Back</Text>
+            </Button>        
+          </View>
       </ScrollView>
     );
   }
@@ -220,21 +279,37 @@ const styles = StyleSheet.create({
 
   },
  inputContainer: {
-    paddingTop: '25%'
+    paddingTop: '5%',
   },
  textInput: {
-   height: '40%',
-   backgroundColor: "#3f51b5",
+   height: 40,
+   padding: 0,
+   fontSize: 20,
+   marginTop: 30,
+   marginBottom: 10,
+   borderColor: 'grey',
+   borderBottomWidth: 1,
    color: "#ffffff", //Expecting this to change input text color
  },
   textAreaContainer: {
+    marginTop: 10,
+    backgroundColor: "white",
+    marginBottom: 20,
     borderColor: 'grey',
     borderWidth: 1,
-    padding: 5
+    borderRadius: 8,
+    padding: 5,
+    
   },
   textArea: {
     height: 150,
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
+    fontSize: 18, 
+    color: "black",
+  },
+  button: {
+    height: 40,
+    color: "white"
   }
 });
 
