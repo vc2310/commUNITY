@@ -29,6 +29,7 @@ class CreateIssuePage extends React.Component {
         province: '',
         country: ''
       },
+      isLoading: false,
     }
 
   }
@@ -48,6 +49,7 @@ class CreateIssuePage extends React.Component {
   }
 
   submit(){
+    this.setState({isLoading: true})
     let formdata = new FormData();
     this.state.issue.images.map((img, index) => {
       formdata.append("multiple_images", {uri: img.uri, name: img.fileName, type: img.type})
@@ -55,12 +57,20 @@ class CreateIssuePage extends React.Component {
     formdata.append("issue", JSON.stringify(this.state.issue))
     createIssue(formdata).then((res)=>{
       if (res){
+        this.setState({isLoading: false})
         this.props.close()
       }
-    }).catch((error)=>{console.log(error)})
+    }).catch((error)=>{
+
+      this.setState({isLoading: false})
+      console.log(error)
+    })
   }
 
   submitDisabled(){
+    if (this.state.isLoading){
+      return true
+    }
     if (this.state.issue.address.city !== this.state.homeAddress.city ||
         this.state.issue.address.province !== this.state.homeAddress.province ||
         this.state.issue.address.country !== this.state.homeAddress.country){
