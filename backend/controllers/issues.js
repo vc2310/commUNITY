@@ -180,7 +180,6 @@ export const getIssue = (req, res, next) => {
             comments.push(temp)
             if(index === array.length-1) {
               issue.comments = comments
-              console.log(issue)
               var json = issue.toJSON();
               res.json({issue: json})
             }
