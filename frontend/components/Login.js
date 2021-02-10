@@ -119,7 +119,7 @@ class Login extends React.Component {
           </View>
           {!this.state.login &&
             <ScrollView style={{width:'90%'}}>
-             
+
               <TextInput style={styles.TextInputStyleClass}
               onChangeText={(firstName) => this.setState({firstName})}
               placeholder="First Name" />
@@ -137,7 +137,6 @@ class Login extends React.Component {
                 placeholder="Are you a Certified Maintainer?"
                 onChangeItem={item => this.setState({isCM: item.value})}
             />
-              
               <TextInput style={styles.TextInputStyleClass}
               onChangeText={(lastName) => this.setState({lastName})}
               placeholder="Last Name" />
