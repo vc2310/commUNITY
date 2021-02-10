@@ -131,6 +131,8 @@ class CreateIssuePage extends React.Component {
         } else if (response.customButton) {
           console.log('User tapped custom button: ', response.customButton);
           alert(response.customButton);
+        } else if (response.errorCode){
+          alert("Camera Unavailable");
         } else {
           const source = { uri: response.uri };
           console.log('response', JSON.stringify(response));
@@ -174,8 +176,8 @@ class CreateIssuePage extends React.Component {
               }} style={{ backgroundColor: 'grey', width: 100, height: 100, justifyContent: "center" }}>
                 <Text>Take Photo</Text>
               </TouchableOpacity>
-              {this.state.issue.images.map((img, index) => (
-                <ImageBackground
+              {this.state.issue.images.map((img, index) => {
+                return (<ImageBackground
                   source={{ uri: img.uri }}
                   key={index}
                   style={{ width: 100, height: 100 }}
@@ -192,8 +194,8 @@ class CreateIssuePage extends React.Component {
                       <FontAwesome name="times-circle" size={30} color="#0275d8" />
                     </View>
                   </TouchableOpacity>
-                </ImageBackground>
-              ))}
+                </ImageBackground>)
+              })}
             </ScrollView>
           </View>
           <View>
