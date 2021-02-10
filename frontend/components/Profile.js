@@ -63,17 +63,9 @@ class Profile extends React.Component {
         this.setState({ isCM: isCM })
       })
     })
-    // .then(() => getIssues({ "createdBy": `${this.state.internalId}` }).then((response) => {
-    //   var tempIssues = response.issues
-    //   tempIssues.sort((a, b) => (a.upVotes.length > b.upVotes.length) ? -1 : (a.upVotes.length < b.upVotes.length) ? 1 : 0)
-    //   this.setState({ userIssues: tempIssues })
-    // }).catch((err) => {
-    //   console.log(err)
-    // }))
   }
 
   render() {
-    // console.log(this.state.internalId);
     getIssues({ "createdBy": `${this.state.internalId}` }).then((response) => {
       // Most recent issues show up first
       var tempIssues = response.issues.reverse()
