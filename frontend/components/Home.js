@@ -95,10 +95,8 @@ class Home extends React.Component {
     try {
         const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
         if ( granted === PermissionsAndroid.RESULTS.GRANTED ) {
-          console.log("granted");
           return true;
         }
-        console.log("not granted");
         return false;
     } catch ( err ) {
       return err;
@@ -152,17 +150,17 @@ class Home extends React.Component {
       <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "10%", marginLeft: "12.5%"}}>
         <LocationAutocomplete onSelect={(item) => {this.setState({ center: item.center})}}/>
       </View>
-      <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "160%", marginLeft: "5%"}}>
+      <View style={{position: 'absolute', width: "75%", marginTop: "155%", marginLeft: "5%"}}>
         <IconButton
-          icon={{ uri: 'https://simpleicon.com/wp-content/uploads/map-marker-17.png' }}
+          icon="crosshairs-gps"
           color={Colors.blue500}
           size={40}
           onPress={(e) => { this.focusUser() }}
         />
       </View>
-      <View style={{position: 'absolute', width: "75%", marginTop: "160%", marginLeft: "82.5%"}}>
-      <Button onPress={()=> this.setState({addIssue: true})}>
-        <Text>+</Text>
+      <View style={{position: 'absolute', width: "75%", marginTop: "156%", marginLeft: "81.5%", borderRadius: 25}}>
+      <Button style={{width: 50, height: 50, borderRadius: 25}}onPress={()=> this.setState({addIssue: true})}>
+        <Text style={{width: "100%", textAlign: "center", fontSize: 16}}>+</Text>
       </Button>
       </View>
       <Overlay overlayStyle={{backgroundColor: "#1c2636"}} isVisible={this.state.addIssue} fullScreen={true} onBackdropPress={()=> this.setState({addIssue: false})}>
