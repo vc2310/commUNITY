@@ -33,6 +33,18 @@ class Profile extends React.Component {
       userIssues: []
     }
   }
+  status(status) {
+    if (status === 'new') {
+      return 'New'
+    }
+    else if (status === 'inProgress') {
+      return 'In Progress'
+    }
+    else if (status === 'resolved') {
+      return 'Resolved'
+    }
+    return ''
+  }
 
   componentDidMount() {
     getUser().then((res) => {
@@ -130,7 +142,7 @@ class Profile extends React.Component {
                       <Text style={{ color: 'white' }}>{item.description}</Text>
                     </View>
                     <View style={{ flexDirection: 'column', minWidth: '50%', maxWidth: '60%' }}>
-                      <Chip icon="information">{item.status.charAt(0).toUpperCase() + item.status.slice(1)}</Chip>
+                      <Chip icon="information">{this.status(item.status)}</Chip>
                     </View>
                   </View>
                 </View>
