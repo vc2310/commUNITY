@@ -1,10 +1,10 @@
 import React from "react";
-import { View, TextInput, Alert, StyleSheet, Picker } from "react-native";
+import { ScrollView, View, TextInput, Alert, StyleSheet, Picker } from "react-native";
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
-import {login, signup} from "../services/auth/AuthService"
+import { login, signup } from "../services/auth/AuthService"
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import Home from "./Home"
-import LocationAutocomplete from '../components/LocationAutocomplete'
+import LocationAutocomplete from './LocationAutocomplete'
 import DropDownPicker from 'react-native-dropdown-picker';
 
 class Login extends React.Component {
@@ -22,68 +22,68 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        login: true,
-        address: {city: '', province: '', country: ''},
-        isCM: 'no'
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      login: true,
+      address: { city: '', province: '', country: '' },
+      isCM: 'no'
     }
   }
-  getSwitchLabel(type){
-    if (type == 'main'){
-      if (!this.state.login){
+  getSwitchLabel(type) {
+    if (type == 'main') {
+      if (!this.state.login) {
         return 'Sign Up'
       }
       return 'Login'
     }
-    if (this.state.login){
+    if (this.state.login) {
       return 'Sign Up'
     }
     return 'Login'
   }
-  submitDisabled(){
-    if (this.state.login && this.state.email !== '' && this.state.password !== ''){
+  submitDisabled() {
+    if (this.state.login && this.state.email !== '' && this.state.password !== '') {
       return false
     }
     else if (!this.state.login && this.state.email !== ''
-              && this.state.password !== '' && this.state.firstName !== ''
-              && this.state.lastName !== '' && this.state.address.city !== ''
-              && this.state.address.province !== '' && this.state.address.country !== ''){
-        return false
+      && this.state.password !== '' && this.state.firstName !== ''
+      && this.state.lastName !== '' && this.state.address.city !== ''
+      && this.state.address.province !== '' && this.state.address.country !== '') {
+      return false
 
     }
     return true
   }
-  submit(){
-    if (this.state.login){
+  submit() {
+    if (this.state.login) {
       login(this.state.email, this.state.password)
-      .then((res)=> {if (res){this.props.navigation.navigate("Home")}})
-      .catch((error)=> {
-        Alert.alert(error)
-      })
-    } else{
+        .then((res) => { if (res) { this.props.navigation.navigate("Home") } })
+        .catch((error) => {
+          Alert.alert(error)
+        })
+    } else {
       var isCM = false
-      if (this.state.isCM === 'yes'){
+      if (this.state.isCM === 'yes') {
         isCM = true
       }
       signup(this.state.email, this.state.password, this.state.firstName, this.state.lastName, this.state.address, isCM)
-      .then((res)=> {if (res){this.props.navigation.navigate("Home")}})
-      .catch((error)=> {
-        Alert.alert(error)
-      })
+        .then((res) => { if (res) { this.props.navigation.navigate("Home") } })
+        .catch((error) => {
+          Alert.alert(error)
+        })
     }
   }
-  selectPicker(){
-    if (this.state.isCM){
+  selectPicker() {
+    if (this.state.isCM) {
       return "yes"
     }
-    else{
+    else {
       return "no"
     }
   }
-  render () {
+  render() {
 
     return (
       <Container style={{ backgroundColor: "#1c2636" }}>
@@ -94,7 +94,7 @@ class Login extends React.Component {
             alignItems: "center",
           }}
         >
-          <H1 style={{color: "white"}}>commUNITY</H1>
+          <H1 style={{ color: "white" }}>commUNITY</H1>
         </View>
         <View
           style={{
@@ -104,60 +104,62 @@ class Login extends React.Component {
             padding: "10%"
           }}
         >
-          <View style={{width:'90%'}}>
+
+          <View style={{ width: '90%' }}>
             <TextInput style={styles.TextInputStyleClass}
-            onChangeText={(email) => this.setState({email})}
-            placeholder="Email" />
+              onChangeText={(email) => this.setState({ email })}
+              placeholder="Email" />
           </View>
-          <View style={{width:'90%'}}>
+          <View style={{ width: '90%' }}>
             <TextInput style={styles.TextInputStyleClass}
               secureTextEntry={true}
-              onChangeText={(password) => this.setState({password})}
+              onChangeText={(password) => this.setState({ password })}
               placeholder="Password"
             />
           </View>
           {!this.state.login &&
-            <View style={{width:'90%'}}>
-              <TextInput style={styles.TextInputStyleClass}
-              onChangeText={(firstName) => this.setState({firstName})}
-              placeholder="First Name" />
-              <DropDownPicker
-                items={[
-                    {label: 'Yes', value: 'yes'},
-                    {label: 'No', value: 'no'},
-                ]}
-                containerStyle={{height: 40}}
-                style={{backgroundColor: '#FFFFFF'}}
-                itemStyle={{
-                    justifyContent: 'flex-start'
-                }}
-                dropDownStyle={{backgroundColor: '#FFFFFF'}}
-                placeholder="Are you a Certified Maintainer?"
-                onChangeItem={item => this.setState({isCM: item.value})}
-            />
+            <ScrollView style={{ width: '90%' }}>
 
               <TextInput style={styles.TextInputStyleClass}
-              onChangeText={(lastName) => this.setState({lastName})}
-              placeholder="Last Name" />
+                onChangeText={(firstName) => this.setState({ firstName })}
+                placeholder="First Name" />
+              <DropDownPicker
+                items={[
+                  { label: 'Yes', value: 'yes' },
+                  { label: 'No', value: 'no' },
+                ]}
+                containerStyle={{ height: 40 }}
+                style={{ backgroundColor: '#FFFFFF' }}
+                itemStyle={{
+                  justifyContent: 'flex-start'
+                }}
+                dropDownStyle={{ backgroundColor: '#FFFFFF' }}
+                placeholder="Are you a Certified Maintainer?"
+                onChangeItem={item => this.setState({ isCM: item.value })}
+              />
+              <TextInput style={styles.TextInputStyleClass}
+                onChangeText={(lastName) => this.setState({ lastName })}
+                placeholder="Last Name" />
+
               <LocationAutocomplete onSelect={(selected) => {
                 var city = ''
                 var province = ''
                 var country = ''
-                selected.context.map((item, index)=>{
-                  if (item.id.includes('place')){
+                selected.context.map((item, index) => {
+                  if (item.id.includes('place')) {
                     city = item.text
                   }
-                  else if (item.id.includes('region')){
+                  else if (item.id.includes('region')) {
                     province = item.text
                   }
-                  else if (item.id.includes('country')){
+                  else if (item.id.includes('country')) {
                     country = item.text
                   }
 
                 })
-                this.setState({address: {city: city, province: province, country: country}})
-              }}/>
-            </View>
+                this.setState({ address: { city: city, province: province, country: country } })
+              }} />
+            </ScrollView>
           }
         </View>
         <View
@@ -168,16 +170,16 @@ class Login extends React.Component {
             flexDirection: "column",
           }}
         >
-        <View>
-          <Button disabled={this.submitDisabled()} onPress={()=> {this.submit()}}>
-            <Text>{this.getSwitchLabel('main')}</Text>
-          </Button>
-        </View>
-        <View>
-          <Button danger onPress={()=> {this.setState({login: !this.state.login})}}>
-            <Text>{this.getSwitchLabel('switch')}</Text>
-          </Button>
-        </View>
+          <View>
+            <Button disabled={this.submitDisabled()} onPress={() => { this.submit() }}>
+              <Text>{this.getSwitchLabel('main')}</Text>
+            </Button>
+          </View>
+          <View>
+            <Button danger onPress={() => { this.setState({ login: !this.state.login }) }}>
+              <Text>{this.getSwitchLabel('switch')}</Text>
+            </Button>
+          </View>
         </View>
       </Container>
     );
@@ -186,25 +188,25 @@ class Login extends React.Component {
 
 const styles = StyleSheet.create({
 
-  MainContainer :{
-  // Setting up View inside content in Vertically center.
-  justifyContent: 'center',
-  flex:1,
-  margin: 10
+  MainContainer: {
+    // Setting up View inside content in Vertically center.
+    justifyContent: 'center',
+    flex: 1,
+    margin: 10
   },
-  TextInputStyleClass:{
-  textAlign: 'center',
-  height: 50,
-   borderWidth: 0,
-   borderRadius: 10 ,
-   backgroundColor : "#FFFFFF",
-   fontWeight: "bold",
+  TextInputStyleClass: {
+    textAlign: 'center',
+    height: 50,
+    borderWidth: 0,
+    borderRadius: 10,
+    backgroundColor: "#FFFFFF",
+    fontWeight: "bold",
 
- },
- inputContainer: {
+  },
+  inputContainer: {
     paddingTop: '25%'
   },
- textInput: {
+  textInput: {
     borderColor: '#CCCCCC',
     borderTopWidth: 1,
     borderBottomWidth: 1,
