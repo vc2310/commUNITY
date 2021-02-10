@@ -6,4 +6,6 @@ frontend/package-lock.json
 backend/package-lock.json
 frontend/ios/Pods/
 frontend/ios/Pods
+frontend/android/app/build
+frontend/android/.gradle
 frontend/package-lock.json

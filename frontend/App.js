@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, StatusBar } from "react-native";
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';

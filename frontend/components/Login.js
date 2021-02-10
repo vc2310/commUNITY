@@ -1,10 +1,10 @@
 import React from "react";
-import { View, TextInput, Alert, StyleSheet, Picker } from "react-native";
+import { ScrollView, View, TextInput, Alert, StyleSheet, Picker } from "react-native";
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import {login, signup} from "../services/auth/AuthService"
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import Home from "./Home"
-import LocationAutocomplete from '../components/LocationAutocomplete'
+import LocationAutocomplete from './LocationAutocomplete'
 import DropDownPicker from 'react-native-dropdown-picker';
 
 class Login extends React.Component {
@@ -104,6 +104,7 @@ class Login extends React.Component {
             padding: "10%"
           }}
         >
+
           <View style={{width:'90%'}}>
             <TextInput style={styles.TextInputStyleClass}
             onChangeText={(email) => this.setState({email})}
@@ -117,7 +118,8 @@ class Login extends React.Component {
             />
           </View>
           {!this.state.login &&
-            <View style={{width:'90%'}}>
+            <ScrollView style={{width:'90%'}}>
+
               <TextInput style={styles.TextInputStyleClass}
               onChangeText={(firstName) => this.setState({firstName})}
               placeholder="First Name" />
@@ -135,10 +137,10 @@ class Login extends React.Component {
                 placeholder="Are you a Certified Maintainer?"
                 onChangeItem={item => this.setState({isCM: item.value})}
             />
-
               <TextInput style={styles.TextInputStyleClass}
               onChangeText={(lastName) => this.setState({lastName})}
               placeholder="Last Name" />
+
               <LocationAutocomplete onSelect={(selected) => {
                 var city = ''
                 var province = ''
@@ -157,7 +159,7 @@ class Login extends React.Component {
                 })
                 this.setState({address: {city: city, province: province, country: country}})
               }}/>
-            </View>
+            </ScrollView>          
           }
         </View>
         <View
