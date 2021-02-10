@@ -36,6 +36,7 @@ class Home extends React.Component {
         detailsID: '',
         currentCoor: [],
         zoomLevel: 12,
+        androidLocationPermission: false,
     }
   }
 
@@ -81,13 +82,28 @@ class Home extends React.Component {
  }
 
  userLocation(location){
+   console.log("userLocation called");
+  this.getAndroidLocationPermission();
    if (location){
      this.setState({currentCoor: [location.coords.longitude, location.coords.latitude]})
    }
  }
 
- focusUser(){
-   this.setState({center: this.state.currentCoor})
+
+ focusUser = async () => {
+   console.log(this.state.androidLocationPermission);
+   if (Platform.OS == "android" && !this.state.androidLocationPermission) {
+     await this.getAndroidLocationPermission();
+     setTimeout(() => {
+      console.log("Timeout Complete!!");
+      console.log("Location Permission" + this.state.androidLocationPermission);
+      if (this.state.androidLocationPermission) {
+        this.focusUser();
+      }
+    }, 1500);
+   } else {
+    this.setState({center: this.state.currentCoor});
+   }
  }
 
  //Requesting Android locations permission, if not already granted
@@ -95,19 +111,15 @@ class Home extends React.Component {
     try {
         const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
         if ( granted === PermissionsAndroid.RESULTS.GRANTED ) {
-          return true;
+          this.setState({androidLocationPermission: true});
         }
-        return false;
+        if(focus) {
+          console.log("Focus Value: " + focus);
+        }
+        console.log("Android location permission");
+        console.log(this.state.androidLocationPermission);
     } catch ( err ) {
       return err;
-    }
-  }
-
-  getUserLocation = (location) => {
-    if (Platform.OS == "android" && !this.getAndroidLocationPermission()) {
-      console.log("User Location cannot be provided due to permissions");
-    } else {
-      this.userLocation(location);
     }
   }
 
@@ -127,8 +139,7 @@ class Home extends React.Component {
     }
     return false;
     });
-
-
+    
     return (
       <View style={{flex: 1, height: "100%", width: "100%" }}>
       <MapboxGL.MapView
@@ -145,7 +156,7 @@ class Home extends React.Component {
           	>
           </MapboxGL.Camera>
           {this.renderAnnotations()}
-          <MapboxGL.UserLocation onUpdate={(location) => {this.getUserLocation(location)}} />
+          <MapboxGL.UserLocation onUpdate={(location) => {this.userLocation(location);}} />
       </MapboxGL.MapView>
       <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "10%", marginLeft: "12.5%"}}>
         <LocationAutocomplete onSelect={(item) => {this.setState({ center: item.center})}}/>
