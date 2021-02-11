@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { View, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
 import { searchLocationAutoComplete } from "../services/mapbox/MapboxService"
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
+import { IconButton, Colors } from 'react-native-paper';
 import { Chip } from 'react-native-paper';
 import LocationAutocomplete from '../components/LocationAutocomplete'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { getUser, logout } from "../services/auth/AuthService"
 import { createIssue, getIssue, commentIssue, changeStatus } from "../services/issue/IssueService"
 import DropDownPicker from 'react-native-dropdown-picker';
+import { constants } from '../services/constants/constants'
 
 class ViewIssue extends React.Component {
   constructor(props){
@@ -48,6 +50,7 @@ class ViewIssue extends React.Component {
       res.user.isCM.then((isCM)=> {
         this.setState({isCM: isCM})
       })
+
     })
     this.getIssues()
   }
@@ -90,9 +93,9 @@ class ViewIssue extends React.Component {
         <View style={styles.inputContainer}>
         <H1 style={{paddingTop: '25%'}}>{this.state.issue.title}</H1>
         </View>
-        <ScrollView horizontal={true}>
+        <ScrollView horizontal={true}  style={{height: 100,}}>
         {this.state.issue.images.map((img, index) => {
-          return <Image source={{uri: 'http://localhost:3000/v1/'+img+'/image'}} key={index} style={{width: 100, height: 100}}/>;
+          return <Image source={{uri: constants.commUNITY_URI+'/v1/'+img+'/image'}} key={index} style={{width: 100, height: 100}}/>;
         })}
         </ScrollView>
         <Text>{this.state.issue.description}</Text>
@@ -102,10 +105,21 @@ class ViewIssue extends React.Component {
         </Text>
         <ScrollView vertical={true}>
           {this.state.issue.comments.map((comment, index) => {
-            return <View style={{backgroundColor: '#1c2636', borderWidth: 0.5}}><Text>{comment[0]}</Text></View>
+            return (<View style={{backgroundColor: '#b2b4b8', borderWidth: 0.5}}>
+                      <View style={{flexDirection: 'row',alignItems: "center",}}>
+                        <Text style={{fontWeight: "bold",}}>{comment[1]}</Text>
+                        <IconButton
+                          icon={{ uri: 'http://simpleicon.com/wp-content/uploads/ok_1.png' }}
+                          color={Colors.blue500}
+                          size={20}
+                          onPress={(e) => {}}
+                        />
+                      </View>
+                      <Text>{comment[0]}</Text>
+                    </View>)
           })}
         </ScrollView>
-        {this.state.isCM === '1' &&
+        {this.state.isCM === '1' && this.state.userCity === this.state.issue.address.city &&
           <View>
             <View style={{flexDirection: 'row'}}>
               <TextInput stye={styles.textArea}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { AsyncStorage } from 'react-native';
+import { constants } from '../constants/constants'
 
 export const login = (email, password) => {
   return new Promise((resolve, reject) => {
@@ -9,7 +10,7 @@ export const login = (email, password) => {
     }
     var body = JSON.stringify({user})
     console.log(body)
-    fetch('http://localhost:3000/v1/login', {
+    fetch(constants.commUNITY_URI+'/v1/login', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -67,7 +68,8 @@ export const signup = (email, password, firstname, lastname, address, isCM) => {
     console.log(user)
     var body = JSON.stringify({user})
     console.log(body)
-    fetch('http://localhost:3000/v1/signup', {
+    console.log(constants.commUNITY_URI);
+    fetch(constants.commUNITY_URI+'/v1/signup', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
