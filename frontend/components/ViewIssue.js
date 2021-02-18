@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { View, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
+import { View, TextInput, Alert, StyleSheet, ScrollView } from "react-native";
 import { searchLocationAutoComplete } from "../services/mapbox/MapboxService"
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
-import { IconButton, Colors } from 'react-native-paper';
-import { Chip } from 'react-native-paper';
+import { Chip, Colors, IconButton } from 'react-native-paper';
+import { SliderBox } from "react-native-image-slider-box";
 import LocationAutocomplete from '../components/LocationAutocomplete'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { getUser, logout } from "../services/auth/AuthService"
@@ -86,52 +86,23 @@ class ViewIssue extends React.Component {
     }
     return ''
   }
-
+  
   render () {
+    
     return (
-      <View>
-        <View style={styles.inputContainer}>
-        <H1 style={{paddingTop: '25%'}}>{this.state.issue.title}</H1>
-        </View>
-        <ScrollView horizontal={true}  style={{height: 100,}}>
-        {this.state.issue.images.map((img, index) => {
-          return <Image source={{uri: constants.commUNITY_URI+'/v1/'+img+'/image'}} key={index} style={{width: 100, height: 100}}/>;
+      <ScrollView>
+        <SliderBox images={this.state.issue.images.map((img, index) => { 
+            return constants.commUNITY_URI+'/v1/' + img + '/image'
         })}
-        </ScrollView>
-        <Text>{this.state.issue.description}</Text>
-        <Chip icon="information">{this.status()}</Chip>
-        <Text>
-          Comment
-        </Text>
-        <ScrollView vertical={true}>
-          {this.state.issue.comments.map((comment, index) => {
-            return (<View style={{backgroundColor: '#b2b4b8', borderWidth: 0.5}}>
-                      <View style={{flexDirection: 'row',alignItems: "center",}}>
-                        <Text style={{fontWeight: "bold",}}>{comment[1]}</Text>
-                        <IconButton
-                          icon={{ uri: 'http://simpleicon.com/wp-content/uploads/ok_1.png' }}
-                          color={Colors.blue500}
-                          size={20}
-                          onPress={(e) => {}}
-                        />
-                      </View>
-                      <Text>{comment[0]}</Text>
-                    </View>)
-          })}
-        </ScrollView>
+        />
+        <Chip style={{marginTop: 10}} icon="information">{this.status()}</Chip>
+        <View style={styles.inputContainer}>
+        <H1 style={{color: "white"}}>{this.state.issue.title}</H1>
+        </View>
+        <Text style={{paddingTop: 10, marginBottom: 15, color: "white"}}>{this.state.issue.description}</Text>      
         {this.state.isCM === '1' && this.state.userCity === this.state.issue.address.city &&
           <View>
-            <View style={{flexDirection: 'row'}}>
-              <TextInput stye={styles.textArea}
-                numberOfLines={9}
-                value={this.state.comment}
-                onChangeText={(description) => {this.setState({comment: description})}}
-                placeholder="Comment description" />
-                <Button disabled={this.state.comment === ''} onPress={()=> this.comment()}>
-                  <Text>Post</Text>
-                </Button>
-            </View>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', marginTop: 10}}>
               <DropDownPicker
                 items={[
                     {label: 'New', value: 'new'},
@@ -139,7 +110,7 @@ class ViewIssue extends React.Component {
                     {label: 'Resolved', value: 'resolved'},
                 ]}
                 defaultValue={this.state.issue.status}
-                containerStyle={{height: 40, width: 150}}
+                containerStyle={{height: 40, width: "75%", marginRight: 10}}
                 style={{backgroundColor: '#FFFFFF'}}
                 itemStyle={{
                     justifyContent: 'flex-start'
@@ -148,18 +119,55 @@ class ViewIssue extends React.Component {
                 placeholder="Status"
                 onChangeItem={item => this.setState({changedStatus: item.value})}
             />
-            <Button disabled={this.state.changedStatus === this.state.issue.status} onPress={()=> this.statusChange()}>
-              <Text>Change Status</Text>
+            <Button style={{marginTop: 0, height: 38}} disabled={this.state.changedStatus === this.state.issue.status} onPress={()=> this.statusChange()}>
+              <Text>Update</Text>
             </Button>
           </View>
+          <View style={{flexDirection: 'row', marginTop: 10}}>
+              <TextInput style={styles.textArea}
+                numberOfLines={5}
+                value={this.state.comment}
+                onChangeText={(description) => {this.setState({comment: description})}}
+                placeholder="Comment description"  
+                textAlignVertical="top"
+                />
+                <Button style={{marginTop: 0, height: 38, paddingLeft: 9, paddingRight: 9}} disabled={this.state.comment === ''} onPress={()=> this.comment()}>
+                  <Text>Post</Text>
+                </Button>
+            </View>
           </View>
         }
-        <View style={{position: 'absolute', width: "75%", marginTop: "180%", marginLeft: "12.5%"}}>
-          <Button onPress={()=> this.props.close()}>
-            <Text>Back</Text>
-          </Button>
+        { this.state.issue.comments.length > 0 && 
+        <Text style={{color: "white", marginTop: 20, marginBottom: 10}}>
+          Comments
+        </Text>
+        }
+        <View>
+          {this.state.issue.comments.map((comment, index) => {
+            return (<View style={{backgroundColor: '#ececec', borderWidth: 1, borderRadius: 5}}>
+                      <View style={{flexDirection: 'row',alignItems: "center", paddingLeft: 10, paddingRight: 10}}>
+                        <Text style={{fontWeight: "bold",}}>{comment[1]}</Text>
+                        <IconButton
+                          icon={{ uri: 'http://simpleicon.com/wp-content/uploads/ok_1.png' }}
+                          color={Colors.blue500}
+                          size={20}
+                          onPress={(e) => {}}
+                        />
+                      </View>
+                      <Text style={{paddingLeft: 10, paddingRight: 10, paddingBottom: 10}}>{comment[0]}</Text>
+                    </View>)
+          })}
         </View>
-      </View>
+        <View style={{position: 'absolute', top: 0, right: 0, padding: 0}}>
+          <IconButton
+            icon="undo-variant"
+            color="white"
+            size={40}
+            style={{margin: 0, padding: 0}}
+            onPress={(e) => { this.props.close() }}
+          />
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -174,11 +182,19 @@ const styles = StyleSheet.create({
 
   },
  inputContainer: {
-    paddingTop: '25%'
+    marginTop: 10,
   },
  textInput: {
    backgroundColor: "#3f51b5",
    color: "#ffffff", //Expecting this to change input text color
+  },
+  textArea: {
+    backgroundColor: "white",
+    borderColor: "grey",
+    justifyContent: "flex-start",
+    marginRight: 10,
+    borderRadius: 5,
+    width: "75%"
   }
 });
 

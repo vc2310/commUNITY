@@ -82,7 +82,6 @@ class Home extends React.Component {
  }
 
  userLocation(location){
-   console.log("userLocation called");
   this.getAndroidLocationPermission();
    if (location){
      this.setState({currentCoor: [location.coords.longitude, location.coords.latitude]})
@@ -95,8 +94,6 @@ class Home extends React.Component {
    if (Platform.OS == "android" && !this.state.androidLocationPermission) {
      await this.getAndroidLocationPermission();
      setTimeout(() => {
-      console.log("Timeout Complete!!");
-      console.log("Location Permission" + this.state.androidLocationPermission);
       if (this.state.androidLocationPermission) {
         this.focusUser();
       }
@@ -161,15 +158,17 @@ class Home extends React.Component {
       <View style={{position: 'absolute', justifyContent: "center", width: "75%", marginTop: "10%", marginLeft: "12.5%"}}>
         <LocationAutocomplete onSelect={(item) => {this.setState({ center: item.center})}}/>
       </View>
-      <View style={{position: 'absolute', width: "75%", marginTop: "155%", marginLeft: "5%"}}>
-        <IconButton
-          icon="crosshairs-gps"
-          color={Colors.blue500}
-          size={40}
-          onPress={(e) => { this.focusUser() }}
-        />
+      <View style={{position: 'absolute', bottom: 90, right: 20}}>
+        <Button style={{width: 50, height: 50, borderRadius: 25, backgroundColor: "white"}}>
+          <IconButton
+            icon="crosshairs-gps"
+            color={Colors.blue500}
+            size={25}
+            onPress={(e) => { this.focusUser() }}
+          />
+        </Button>
       </View>
-      <View style={{position: 'absolute', width: "75%", marginTop: "156%", marginLeft: "81.5%", borderRadius: 25}}>
+      <View style={{position: 'absolute', bottom: 25, right: 20}}>
       <Button style={{width: 50, height: 50, borderRadius: 25}}onPress={()=> this.setState({addIssue: true})}>
         <Text style={{width: "100%", textAlign: "center", fontSize: 16}}>+</Text>
       </Button>
@@ -177,7 +176,7 @@ class Home extends React.Component {
       <Overlay overlayStyle={{backgroundColor: "#1c2636"}} isVisible={this.state.addIssue} fullScreen={true} onBackdropPress={()=> this.setState({addIssue: false})}>
         <CreateIssuePage close={()=> this.setState({addIssue: false})}/>
       </Overlay>
-      <Overlay isVisible={this.state.details} fullScreen={true} onBackdropPress={()=> this.setState({details: false, detailsID: ''})}>
+      <Overlay overlayStyle={{backgroundColor: "#1c2636"}} isVisible={this.state.details} fullScreen={true} onBackdropPress={()=> this.setState({details: false, detailsID: ''})}>
         <ViewIssue close={()=> this.setState({details: false})} id={this.state.detailsID}></ViewIssue>
       </Overlay>
     </View>
