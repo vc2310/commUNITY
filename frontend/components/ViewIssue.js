@@ -86,12 +86,12 @@ class ViewIssue extends React.Component {
     }
     return ''
   }
-  
+
   render () {
-    
+
     return (
-      <ScrollView>
-        <SliderBox images={this.state.issue.images.map((img, index) => { 
+      <ScrollView style={{top: 50}}>
+        <SliderBox images={this.state.issue.images.map((img, index) => {
             return constants.commUNITY_URI+'/v1/' + img + '/image'
         })}
         />
@@ -99,7 +99,7 @@ class ViewIssue extends React.Component {
         <View style={styles.inputContainer}>
         <H1 style={{color: "white"}}>{this.state.issue.title}</H1>
         </View>
-        <Text style={{paddingTop: 10, marginBottom: 15, color: "white"}}>{this.state.issue.description}</Text>      
+        <Text style={{paddingTop: 10, marginBottom: 15, color: "white"}}>{this.state.issue.description}</Text>
         {this.state.isCM === '1' && this.state.userCity === this.state.issue.address.city &&
           <View>
             <View style={{flexDirection: 'row', marginTop: 10}}>
@@ -128,7 +128,7 @@ class ViewIssue extends React.Component {
                 numberOfLines={5}
                 value={this.state.comment}
                 onChangeText={(description) => {this.setState({comment: description})}}
-                placeholder="Comment description"  
+                placeholder="Comment description"
                 textAlignVertical="top"
                 />
                 <Button style={{marginTop: 0, height: 38, paddingLeft: 9, paddingRight: 9}} disabled={this.state.comment === ''} onPress={()=> this.comment()}>
@@ -137,7 +137,7 @@ class ViewIssue extends React.Component {
             </View>
           </View>
         }
-        { this.state.issue.comments.length > 0 && 
+        { this.state.issue.comments.length > 0 &&
         <Text style={{color: "white", marginTop: 20, marginBottom: 10}}>
           Comments
         </Text>
