@@ -40,7 +40,7 @@ export const createIssueWithImage = (req, res, next) => {
         var issue = JSON.parse(req.body.issue)
         var images = []
         req.files.map((img, index) => {
-          images.push(img.path.split('/').pop())
+          images.push(img.filename)
         })
         issue.images = images
         if(!issue.title || !issue.description || !issue.address || !issue.createdBy) {
@@ -399,7 +399,7 @@ export const commentIssue = (req, res, next) => {
     Issue.findById(comment.issueID).then((issue)=>{
       if (issue){
         const today = new Date();
-        Issue.updateOne({_id: comment.issueID}, {$push: {comments: [comment.text, comment.createdBy, today]}}).then((issue)=>{
+        Issue.updateOne({_id: comment.issueID}, {$push: {comments: { $each: [[comment.text, comment.createdBy, today]], $position: 0}}}).then((issue)=>{
           Issue.findById(comment.issueID).then((issue)=>{
             return res.json({issue: issue})
           }, (error)=>{
