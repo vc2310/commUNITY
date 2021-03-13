@@ -13,6 +13,7 @@ export class Login extends Component {
   }
   submit() {
     console.log("submit pressed");
+    /*
     login(this.state.email, this.state.password)
       .then((res) => {
         if (res) {
@@ -21,7 +22,22 @@ export class Login extends Component {
       })
       .catch((error) => {
         alert("Wrong");
-      });
+      });*/
+    const body_content = JSON.stringify({
+      user: { email: "A@gmail.com", password: "abc" },
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: body_content,
+    };
+    fetch("http://localhost:3000/v1/login", requestOptions)
+      .then((response) => response.json())
+      .then((data) => this.setState({ postId: data.id }));
   }
 
   render() {
