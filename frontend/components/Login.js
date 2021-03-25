@@ -134,14 +134,14 @@ class Login extends React.Component {
             padding: "10%",
           }}
         >
-          <View style={{ width: "90%" }}>
+          <View style={{ width: "90%", paddingBottom: 10 }}>
             <TextInput
               style={styles.TextInputStyleClass}
               onChangeText={(email) => this.setState({ email })}
               placeholder="Email"
             />
           </View>
-          <View style={{ width: "90%" }}>
+          <View style={{ width: "90%", paddingBottom: 10 }}>
             <TextInput
               style={styles.TextInputStyleClass}
               secureTextEntry={true}
@@ -152,11 +152,13 @@ class Login extends React.Component {
           {!this.state.login &&
 
             <ScrollView style={{ width: '90%' }}>
-
+              <View style={{paddingBottom: 10}}>
               <TextInput style={styles.TextInputStyleClass}
                 onChangeText={(firstName) => this.setState({ firstName })}
                 placeholder="First Name"
               />
+              </View>
+              <View style={{paddingBottom: 10}}>
               <DropDownPicker
                 items={[
                   { label: "Yes", value: "yes" },
@@ -167,15 +169,17 @@ class Login extends React.Component {
                 itemStyle={{
                   justifyContent: "flex-start",
                 }}
-                dropDownStyle={{ backgroundColor: "#FFFFFF" }}
+                dropDownStyle={{ backgroundColor: "#FFFFFF", paddingBottom: 10 }}
                 placeholder="Are you a Certified Maintainer?"
                 onChangeItem={(item) => this.setState({ isCM: item.value })}
               />
+              </View>
+              <View style={{paddingBottom: 10}}>
               <TextInput
                 style={styles.TextInputStyleClass}
                 onChangeText={(lastName) => this.setState({ lastName })}
                 placeholder="Last Name" />
-
+              </View>
               <LocationAutocomplete onSelect={(selected) => {
                 var city = ''
                 var province = ''
@@ -208,7 +212,7 @@ class Login extends React.Component {
           }}
         >
 
-          <View>
+          <View style={{ width: this.getSwitchLabel("main") == 'Login' ? 220 : 140, marginBottom: 10}}>
             <Button
               style={{
                 padding: "10%",
@@ -223,7 +227,7 @@ class Login extends React.Component {
               <Text>{this.getSwitchLabel("main")}</Text>
             </Button>
           </View>
-          <View>
+          <View style={{width: this.getSwitchLabel("switch") == 'Sign Up' ? 140 : 215, marginBottom: 30}}>
             <Button
               danger
               style={{

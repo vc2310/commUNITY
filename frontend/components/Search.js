@@ -1,11 +1,13 @@
 import React from "react";
-import { View, TextInput, Alert, StyleSheet, ScrollView } from "react-native";
+import { View, TextInput, Alert, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import { IconButton, Colors, Chip } from 'react-native-paper';
+import { Overlay } from 'react-native-elements';
 import LocationAutocomplete from '../components/LocationAutocomplete'
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { getUser, logout } from "../services/auth/AuthService"
-import { getIssues, upVoteIssue, downVoteIssue } from "../services/issue/IssueService"
+import { getUser, logout } from "../services/auth/AuthService";
+import { getIssues, upVoteIssue, downVoteIssue } from "../services/issue/IssueService";
+import ViewIssue from '../components/ViewIssue';
 
 class Search extends React.Component {
   static navigationOptions = {
@@ -25,6 +27,8 @@ class Search extends React.Component {
       issues: [],
       center: [],
       userID: '',
+      details: false,
+      detailsID: '',
       address:{
         city: '',
         province: '',
@@ -121,7 +125,7 @@ class Search extends React.Component {
         return Colors.red500
       }
     }
-    return Colors.white500
+    return Colors.grey500
   }
   render() {
     return (
@@ -131,39 +135,45 @@ class Search extends React.Component {
           {
             this.state.issues.map((item, index) => (
               <View key={item.id} style={styles.item}>
-                <View style={{ flexDirection: 'column' }}>
+                <TouchableOpacity 
+                onPress = {() => {
+                  this.setState({details: true})
+                  this.setState({detailsID: item.id})
+                }}>
+                <View style={{ width: '75%', padding: 30 }}>
                   <View>
                     <Text style={{ fontWeight: 'bold', color: 'white' }}>{item.title}</Text>
                     <Text style={{ color: 'white' }}>{item.description}</Text>
                   </View>
-                  <View style={{ flexDirection: 'column' }}>
+                  <View style={{ flexDirection: 'column', paddingTop: 10}}>
                     <Chip icon="information">{this.status(item.status)}</Chip>
                   </View>
                 </View>
-                <View style={{ flexDirection: 'row' }}>
-                  <View style={{ flexDirection: 'column' }}>
+                </TouchableOpacity>
+                <View style={{ position: 'absolute', right: 0, top: '20%', width: '25%', paddingLeft: '25%'}}>
+                  <View style={{ flexDirection: 'column'}}>
                     {item.address.city === this.state.homeAddress.city
                       &&
                       <View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                           <IconButton
-                            icon={{ uri: 'https://simpleicon.com/wp-content/uploads/like.png' }}
+                            icon="thumb-up"
                             color={this.iconColor(item, 1)}
                             size={20}
                             onPress={(e) => { this.upvote(item.id) }}
                           />
-                          <Text>
+                          <Text style={{color: Colors.grey500}}>
                             {item.upVotes.length}
                           </Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                           <IconButton
-                            icon={{ uri: 'https://simpleicon.com/wp-content/uploads/unlike.png' }}
+                            icon="thumb-down"
                             color={this.iconColor(item, 0)}
                             size={20}
                             onPress={(e) => { this.downvote(item.id) }}
                           />
-                          <Text>
+                          <Text style={{color: Colors.grey500}}>
                             {item.downVotes.length}
                           </Text>
                         </View>
@@ -174,7 +184,7 @@ class Search extends React.Component {
             ))
           }
         </ScrollView>}
-        <View style={{ position: 'absolute', justifyContent: "center", width: "75%", marginTop: "10%", marginLeft: "12.5%" }}>
+        <View style={{ position: 'absolute', justifyContent: "center", width: "75%", marginTop: "8%", marginLeft: "12.5%" }}>
           <LocationAutocomplete text={this.state.address.city} onSelect={(selected) => {
             var city = ''
             var province = ''
@@ -196,17 +206,20 @@ class Search extends React.Component {
             })
           }} />
         </View>
+        <Overlay overlayStyle={{backgroundColor: "#1c2636"}} isVisible={this.state.details} fullScreen={true} onBackdropPress={()=> this.setState({details: false, detailsID: ''})}>
+        <ViewIssue close={()=> this.setState({details: false})} id={this.state.detailsID}></ViewIssue>
+        </Overlay>
       </View>
     );
   }
 }
 const styles = StyleSheet.create({
   item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 30,
-    borderWidth: 0.5,
+    position: 'relative',
+    padding: 0,
+    borderTopWidth: 0.3,
+    borderTopColor: '#555',
+    width: '100%',
   }
 })
 
