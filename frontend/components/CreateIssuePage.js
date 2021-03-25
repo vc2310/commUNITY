@@ -207,7 +207,7 @@ class CreateIssuePage extends React.Component {
 
     return (
 
-      <ScrollView style={{paddingTop: 35}}>
+      <ScrollView style={{marginTop: Platform.OS === 'ios' ? 35 : 20}}>
         <View >
           <H1 style={{color: "white"}}>Report Issue</H1>
         </View>

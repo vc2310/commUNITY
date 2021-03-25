@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Alert, StyleSheet, ScrollView } from "react-native";
+import { View, TextInput, Alert, StyleSheet, ScrollView, Platform } from "react-native";
 import { searchLocationAutoComplete } from "../services/mapbox/MapboxService"
 import { Container, Header, Content, Button, Text, H1 } from "native-base";
 import { Chip, Colors, IconButton } from 'react-native-paper';
@@ -90,8 +90,8 @@ class ViewIssue extends React.Component {
   render () {
 
     return (
-      <ScrollView style={{top: 50}}>
-        <SliderBox images={this.state.issue.images.map((img, index) => {
+      <ScrollView style={{marginTop: Platform.OS === 'ios' ? 50 : 10}}>
+        <SliderBox dotColor="#90A4AE" images={this.state.issue.images.map((img, index) => {
             return constants.commUNITY_URI+'/v1/' + img + '/image'
         })}
         />
@@ -110,7 +110,7 @@ class ViewIssue extends React.Component {
                     {label: 'Resolved', value: 'resolved'},
                 ]}
                 defaultValue={this.state.issue.status}
-                containerStyle={{height: 40, width: "75%", marginRight: 10}}
+                containerStyle={{height: 40, width: "70%", marginRight: 10}}
                 style={{backgroundColor: '#FFFFFF'}}
                 itemStyle={{
                     justifyContent: 'flex-start'
@@ -126,6 +126,7 @@ class ViewIssue extends React.Component {
           <View style={{flexDirection: 'row', marginTop: 10}}>
               <TextInput style={styles.textArea}
                 numberOfLines={5}
+                multiline={true}
                 value={this.state.comment}
                 onChangeText={(description) => {this.setState({comment: description})}}
                 placeholder="Comment description"
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     marginRight: 10,
     borderRadius: 5,
-    width: "75%"
+    width: "70%"
   }
 });
 

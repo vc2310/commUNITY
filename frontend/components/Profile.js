@@ -21,8 +21,10 @@ import {
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import { getUser, logout } from "../services/auth/AuthService";
 import { getIssues, getIssue } from "../services/issue/IssueService";
-import { Avatar, Accessory } from "react-native-elements";
+import { Avatar, Accessory, Overlay} from "react-native-elements";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { TouchableOpacity } from "react-native";
+import ViewIssue from '../components/ViewIssue';
 
 class Profile extends React.Component {
   static navigationOptions = {
@@ -46,6 +48,8 @@ class Profile extends React.Component {
       internalId: "",
       isCM: "",
       userIssues: [],
+      details: false,
+      detailsID: ''
     };
   }
   status(status) {
@@ -122,21 +126,9 @@ class Profile extends React.Component {
       >
         <View
           style={{
-            flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            marginTop: "10%",
-          }}
-        >
-          <H1 style={{ color: "white" }}>
-            {this.state.firstName} {this.state.lastName}
-          </H1>
-        </View>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: "5%",
+            marginTop: 10
           }}
         >
           <Avatar
@@ -148,59 +140,66 @@ class Profile extends React.Component {
               this.state.firstName.charAt(0).toUpperCase() +
               this.state.lastName.charAt(0).toUpperCase()
             }
-          ></Avatar>
-          {this.state.isCM == 1 ? (
-            <FontAwesome
-              name="check-circle"
-              size={30}
-              style={{ color: "#1DA1F2" }}
-            />
-          ) : (
-            <H1></H1>
-          )}
+          />
         </View>
         <View
           style={{
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: "10%",
           }}
         >
-          <H3 style={{ color: "white" }}>Email: {this.state.email}</H3>
-          <H3 style={{ color: "white" }}>
+          <H1 style={{ color: "white" }}>
+            {this.state.firstName} {this.state.lastName} {this.state.isCM == 1 &&
+            <FontAwesome
+              name="check-circle"
+              size={25}
+              style={{ color: "#1DA1F2" }}
+            />
+            }
+          </H1>
+        </View>
+        
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: "10%",
+            marginTop: 10,
+            paddingBottom: 20,
+          }}
+        >
+          <Text style={{ color: "white", textAlign: 'center', fontSize: 18 }}>Email: {this.state.email}</Text>
+          <Text style={{ color: "white", textAlign: 'center', fontSize: 18 }}>
             Address:{" "}
             {this.state.address.city +
               ", " +
               this.state.address.province +
               ", " +
               this.state.address.country}
-          </H3>
+          </Text>
         </View>
 
         <View>
-          <H1 style={{ color: "white" }}>Your Issues</H1>
+          <H2 style={{ color: "white", paddingBottom: 10 }}>Your Issues</H2>
           <View>
-            {this.state.userIssues.map((item, index) => (
-              <View key={item.id} style={styles.item}>
-                <View style={{ flexDirection: "column" }}>
-                  <View>
+            {this.state.userIssues.map((item, index) => (       
+              <TouchableOpacity 
+                key={item.id} 
+                style={styles.item}
+                onPress = {() => {
+                  this.setState({details: true})
+                  this.setState({detailsID: item.id})
+                }}>
+                  <View style={{width: '100%'}}>
                     <Text style={{ fontWeight: "bold", color: "white" }}>
                       {item.title}
                     </Text>
-                    <Text style={{ color: "white" }}>{item.description}</Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      minWidth: "50%",
-                      maxWidth: "60%",
-                    }}
-                  >
+                    <Text style={{ color: "white", paddingBottom: 10 }}>{item.description}</Text>
                     <Chip icon="information">{this.status(item.status)}</Chip>
-                  </View>
-                </View>
-              </View>
+                  </View>   
+              </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -230,6 +229,9 @@ class Profile extends React.Component {
             <Text>LogOut</Text>
           </Button>
         </View>
+        <Overlay overlayStyle={{backgroundColor: "#1c2636"}} isVisible={this.state.details} fullScreen={true} onBackdropPress={()=> this.setState({details: false, detailsID: ''})}>
+        <ViewIssue close={()=> this.setState({details: false})} id={this.state.detailsID}></ViewIssue>
+        </Overlay>
       </ScrollView>
     );
   }
@@ -238,10 +240,11 @@ class Profile extends React.Component {
 const styles = StyleSheet.create({
   item: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    width: '100%',
     alignItems: "center",
     padding: 30,
-    borderWidth: 0.5,
+    borderTopWidth: 0.3,
+    borderTopColor: '#555'
   },
 });
 
